@@ -1,0 +1,216 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-6">
+            <div class="card">
+                <div class="content">
+                    <br>
+                    <div class="alert alert-info alert-with-icon" data-notify="container">
+                        <!-- <button type="button" aria-hidden="true" class="close">×</button> -->
+                        <span data-notify="icon" class="fa fa-dollar"></span>
+                        <span data-notify="message">Tu saldo actual es {{saldo_card}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Atrás
+                    </button>
+                    
+                    <h4 class="title" style="display: inline-block; margin-left: 5px;"> Métodos de pago</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <ul role="tablist" class="nav nav-tabs mi-nav" style="display: flex; justify-content: center;">
+                        <li role="presentation" class="active">
+                            <a href="#tab1" data-toggle="tab">Transf.</a>
+                        </li>
+                        <li>
+                            <a href="#tab2" data-toggle="tab">Tarjeta</a>
+                        </li>
+                        <li>
+                            <a href="#tab3" data-toggle="tab">PayPal</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="tab1" class="tab-pane active" >
+
+                            <h4 class="title">Realiza una transferencia a nuestra cuenta</h4>
+                            <br>
+
+                            <div class="row">
+
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div><strong>Nombre del beneficiario:</strong></div>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div style="overflow: hidden;">David Usiel León Barraza</div>
+                                    </div>
+                                </div>
+                              </div> 
+
+                            </div>
+
+                            <div class="row">
+
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div><strong>Banco:</strong></div>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div style="overflow: hidden;">BanBajio</div>
+                                    </div>
+                                </div>
+                              </div> 
+
+                            </div>
+
+                            <div class="row">
+
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div><strong>CLABE:</strong></div>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                <div class="card" style="background-color: #e9edf2;">
+                                    <div class="content text-center">
+                                        <div style="overflow: hidden;">030730900000838337</div>
+                                    </div>
+                                </div>
+                              </div> 
+
+                            </div>
+
+                            <br>
+                            <h4 class="title">Agregar comprobante de transferencia</h4>
+                            <br>
+
+                            <div class="row">
+
+                              <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <!--- DEFINIER COMPONENTE DE FILE-->
+                                    <div *ngIf="!imagen" class="wrapper">
+                                      <div class="position-relative">
+                                          <h3 class="etiqueta">Subir imagen</h3>
+                                          <input class="input-file" (change)="capturarFile($event)" type="file" accept="image/*" #btnFile id="btnFile">
+                                      </div>
+                                    
+                                    </div>
+
+                                    <div *ngIf="imagen" class="wrapper">
+                                      <div class="position-relative">
+                                          <h5 class="text-warning bold">Tu captura se ha enviado a nuestro Administrador.</h5>
+                                          <h5 class="text-warning bold">Nos contactaremos contigo en unos momentos.</h5>
+
+                                          <div class="wrapper-button">
+                                            <button type="button" class="button-subir" style="cursor: pointer;" (click)="nuevoArchivo($event)">
+                                                Subir Nuevo Archivo
+                                            </button>
+                                          </div>
+
+                                          <div class="preview-img" style="margin-top: 120px;">
+                                              <img  [src]="imagen" alt="">
+                                          </div>
+
+                                      </div>
+                                    
+                                    </div>
+
+
+                                  </div>
+
+                              </div> 
+
+                            </div>
+
+                                
+                        </div>
+                        <div id="tab2" class="tab-pane" >
+
+                            <app-tdd-tdc (verMiSaldo)="miSaldo2()"></app-tdd-tdc>
+
+                        </div>
+                        <div id="tab3" class="tab-pane" >
+
+                            <div class="row" [hidden]="flujoPayPal != 1">
+                                <div class="col-md-12 form-group">
+                                  <label>
+                                    <small class="text-invalid bold">
+                                      En pago con PayPal se tiene un incremento de 5 MXN + 5%
+                                    </small>
+                                  </label>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                  <label>Monto a recargar</label>
+                                  <div class="input-group">
+                                    <div class="input-group-addon">MXN</div>
+                                    <input type="number" class="form-control" placeholder="Monto" [(ngModel)]="abono" id="abono" min="0">
+                                  </div>
+                                </div>
+                                <div class="col-md-12">                                            
+                                  <button type="button" class="btn btn-tn btn-primary" (click)="mostrarBotonPayPal()" [disabled]="!abono">Aceptar</button>           
+                                </div>
+                            </div>
+                            <div class="row" [hidden]="flujoPayPal != 2">
+                                <br>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="text-align: center;margin-top: 10px;">
+                                  <button type="button" class="btn btn-tn btn-primary" (click)="atrasPayPal()">
+                                    Atrás
+                                  </button>  
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="text-align: center;margin-top: 10px;">
+                                  <div id="paypal-button"
+                                    style="height: 40px;
+                                        min-height: 45px;
+                                        max-height: 75px;" 
+                                  ></div>        
+                                </div>  
+                                <br><br>         
+                            </div> 
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+</div>
+</div>
+

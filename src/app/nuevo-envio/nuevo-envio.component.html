@@ -1,0 +1,1461 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <!-- flujo 1 -->
+    <div [hidden]="flujo != 1" class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                        <span class="btn-label">
+                            <i class="fa fa-arrow-left"></i>
+                        </span>
+                        Atrás
+                    </button>
+                    
+                    <h4 class="title" style="display: inline-block; margin-left: 5px;"> Nueva cotización</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="flujo != 1" class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="header">
+
+                  <h4 class="title">Información de origen</h4>
+
+                </div>
+                <div class="content">
+
+                  <form autocomplete="off" [formGroup]="myFormRemitente">
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Libreta de direcciones</label>
+                        <select *ngIf="!corregir" class="form-control" id="r_origenes" (change)="changeSetOrigen($event.target.value)">
+                          <option disabled selected> -- direcciones recientes -- </option>
+                          <option *ngFor="let origen of origenes" [value]="origen.id">{{origen.alias}} - {{origen.nombre}} {{origen.apellido}} - {{origen.cp}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Buscar</label>
+                        <input type="text" class="form-control" id="buscar" placeholder="Buscar..." formControlName="buscar"  >
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="origenesFilter.length > 0" style="margin-top: -16px;">      
+                        <ul style="height: 150px !important; overflow-x: scroll; background-color: #fff; border : 1px solid #ccc;">
+                          <li > -- Selecciona una dirección -- </li>
+                          <li *ngFor="let item of origenesFilter"
+                           style="cursor: pointer; margin-top: 5px;"
+                           (click)="changeSetOrigen(item.id)">
+                            {{item.nombre}} {{item.apellido}} - {{item.cp}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" id="r_nombre" placeholder="Nombre" formControlName="nombre" [class.error]="r_nombreNoValido">
+                        <small *ngIf="r_nombreNoValido" class="text-danger">
+                          Requerido (2-14) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Apellido</label>
+                        <input type="text" class="form-control" id="r_apellido" placeholder="Apellido" formControlName="apellido" [class.error]="r_apellidoNoValido">
+                        <small *ngIf="r_apellidoNoValido" class="text-danger">
+                          Requerido (2-14) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Empresa</label>
+                        <input type="text" class="form-control" id="r_empresa" placeholder="Empresa (opcional)" formControlName="empresa" [class.error]="r_empresaNoValido">
+                        <small *ngIf="r_empresaNoValido" class="text-danger">
+                          Opcional (2-28) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <!-- <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="r_email" placeholder="Email" formControlName="email" [class.error]="r_emailNoValido">
+                        <small *ngIf="r_emailNoValido" class="text-danger">
+                          Requerido
+                        </small>
+                      </div> -->
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" id="r_telefono" placeholder="Teléfono" formControlName="telefono" [class.error]="r_telefonoNoValido">
+                        <small *ngIf="r_telefonoNoValido" class="text-danger">
+                          Requerido (10) (Solo números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Calle</label>
+                        <input type="text" class="form-control" id="r_calle" placeholder="Calle" formControlName="calle" [class.error]="r_calleNoValido">
+                        <small *ngIf="r_calleNoValido" class="text-danger">
+                          Requerido (2-24) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 form-group">
+                        <label>No. ext.</label>
+                        <input type="text" class="form-control" id="r_num_exterior" placeholder="No. exterior" formControlName="num_exterior" [class.error]="r_num_exteriorNoValido">
+                        <small *ngIf="r_num_exteriorNoValido" class="text-danger">
+                          Requerido (2-5) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 form-group">
+                        <label>No. int.</label>
+                        <input type="text" class="form-control" id="r_num_interior" placeholder="No. interior" formControlName="num_interior" [class.error]="r_num_interiorNoValido">
+                        <small *ngIf="r_num_interiorNoValido" class="text-danger">
+                          Opcional (2-5) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Referencia</label>
+                        <input type="text" class="form-control" id="r_referencia" placeholder="Referencias / Entre calles" formControlName="referencia" [class.error]="r_referenciaNoValido">
+                        <small *ngIf="r_referenciaNoValido" class="text-danger">
+                          Requerido (2-25) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Código postal</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="r_cp" placeholder="Código postal" formControlName="cp" [class.error]="r_cpNoValido">
+                          <span class="input-group-btn">
+                            <button class="btn btn-info" (click)="validarZipcode(myFormRemitente.value.cp,0)">
+                              Buscar
+                            </button>
+                          </span>
+                        </div>
+                        <small *ngIf="r_cpNoValido" class="text-danger">
+                          Requerido (5) (Solo números)
+                        </small>
+                      </div>
+                    </div>
+
+                    <!-- <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Colonia</label>
+                        <select class="form-control" id="r_colonias" formControlName="colonia">
+                          <option disabled selected> -- seleccione una colonia -- </option>
+                          <option *ngFor="let colonia of coloniasR" [value]="colonia">{{colonia}}</option>
+                        </select>
+                      </div>
+                    </div> -->
+
+                    <div class="row">
+                      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <label>Colonia</label>
+                          <select class="form-control" id="r_colonias" formControlName="colonia">
+                            <option disabled selected> -- seleccione una colonia -- </option>
+                            <option *ngFor="let colonia of coloniasR" [value]="colonia">{{colonia}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                        <button class="btn btn-social btn-round btn-linkedin" (click)="aCrearColonia(1)">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 form-group">
+                        <label>Municipio</label>
+                        <input type="text" class="form-control" id="r_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="r_ciudadNoValido">
+                        <small *ngIf="r_ciudadNoValido" class="text-danger">
+                          Requerido (2-30)
+                        </small>
+                      </div>
+                      <div class="col-md-6 form-group">
+                        <label>Estado</label>
+                        <input type="text" class="form-control" id="r_estado" placeholder="Estado" formControlName="estado" [class.error]="r_estadoNoValido">
+                        <small *ngIf="r_estadoNoValido" class="text-danger">
+                          Requerido (2-30)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <!-- <div class="col-md-12 form-group">
+                        <div class="checkbox">
+                            <input id="checkbox22" type="checkbox" formControlName="rfc_bandera">
+                            <label for="checkbox22">
+                              RFC
+                            </label>
+                        </div>
+                      </div> -->
+                      <div class="col-md-12 form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="checkbox22" formControlName="rfc_bandera">
+                        <label class="form-check-label" for="checkbox22">&nbsp;&nbsp;RFC</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group" [hidden]="!myFormRemitente.value.rfc_bandera">
+                        <label>RFC</label>
+                        <input type="text" class="form-control" id="r_rfc" placeholder="RFC" formControlName="rfc" [class.error]="r_rfcNoValido">
+                        <small *ngIf="r_rfcNoValido" class="text-danger">
+                          Requerido (13) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">           
+                      <div class="demo-radio col-md-12">
+                        <label class="custom-control custom-radio" [hidden]="!myFormRemitente.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_dir" formControlName="radios_dir" value="1">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Actualizar dirección</span>
+                        </label>
+                        <label class="custom-control custom-radio" [hidden]="myFormRemitente.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_dir" formControlName="radios_dir" value="2">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Guardar como nueva dirección</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group" [hidden]="!myFormRemitente.value.guardar && !myFormRemitente.value.actualizar">
+                        <label>Álias</label>
+                        <input type="text" class="form-control" id="r_alias" placeholder="Álias" formControlName="alias" [class.error]="r_aliasNoValido">
+                        <small *ngIf="r_aliasNoValido" class="text-danger">
+                          Requerido (2-50) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+
+                  </form>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="header">
+
+                  <h4 class="title">Información de destino</h4>
+
+                </div>
+                <div class="content">
+
+                  <form autocomplete="off" [formGroup]="myFormDestino">
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Libreta de direcciones</label>
+                        <select *ngIf="!corregir" class="form-control" id="d_destinos" (change)="changeSetDestino($event.target.value)">
+                          <option disabled selected> -- direcciones recientes -- </option>
+                          <option *ngFor="let destino of destinos" [value]="destino.id">{{destino.alias}} - {{destino.nombre}} {{destino.apellido}} - {{destino.cp}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Buscar</label>
+                        <input type="text" class="form-control" id="buscar" placeholder="Buscar..." formControlName="buscar"  >
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="destinosFilter.length > 0" style="margin-top: -16px;">      
+                        <ul style="height: 150px !important; overflow-x: scroll; background-color: #fff; border : 1px solid #ccc;">
+                          <li > -- Selecciona una dirección -- </li>
+                          <li *ngFor="let item of destinosFilter"
+                           style="cursor: pointer; margin-top: 5px;"
+                           (click)="changeSetDestino(item.id)">
+                            {{item.nombre}} {{item.apellido}} - {{item.cp}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" id="d_nombre" placeholder="Nombre" formControlName="nombre" [class.error]="d_nombreNoValido">
+                        <small *ngIf="d_nombreNoValido" class="text-danger">
+                          Requerido (2-14) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Apellido</label>
+                        <input type="text" class="form-control" id="d_apellido" placeholder="Apellido" formControlName="apellido" [class.error]="d_apellidoNoValido">
+                        <small *ngIf="d_apellidoNoValido" class="text-danger">
+                          Requerido (2-14) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Empresa</label>
+                        <input type="text" class="form-control" id="d_empresa" placeholder="Empresa (opcional)" formControlName="empresa" [class.error]="d_empresaNoValido">
+                        <small *ngIf="d_empresaNoValido" class="text-danger">
+                          Opcional (2-28) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <!-- <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 form-group">
+                        <input type="text" class="form-control" id="d_email" placeholder="Email" formControlName="email" [class.error]="d_emailNoValido">
+                        <small *ngIf="d_emailNoValido" class="text-danger">
+                          Requerido
+                        </small>
+                      </div> -->
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>Teléfono</label>
+                        <input type="text" class="form-control" id="d_telefono" placeholder="Teléfono" formControlName="telefono" [class.error]="d_telefonoNoValido">
+                        <small *ngIf="d_telefonoNoValido" class="text-danger">
+                          Requerido (10) (Solo números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <label>Calle</label>
+                        <input type="text" class="form-control" id="d_calle" placeholder="Calle" formControlName="calle" [class.error]="d_calleNoValido">
+                        <small *ngIf="d_calleNoValido" class="text-danger">
+                          Requerido (2-24) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 form-group">
+                        <label>No. ext.</label>
+                        <input type="text" class="form-control" id="d_num_exterior" placeholder="No. exterior" formControlName="num_exterior" [class.error]="d_num_exteriorNoValido">
+                        <small *ngIf="d_num_exteriorNoValido" class="text-danger">
+                          Requerido (2-5) (Solo letras y números)
+                        </small>
+                      </div>
+                      <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 form-group">
+                        <label>No. int.</label>
+                        <input type="text" class="form-control" id="d_num_interior" placeholder="No. interior" formControlName="num_interior" [class.error]="d_num_interiorNoValido">
+                        <small *ngIf="d_num_interiorNoValido" class="text-danger">
+                          Opcional (2-5) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Referencia</label>
+                        <input type="text" class="form-control" id="d_referencia" placeholder="Referencias / Entre calles" formControlName="referencia" [class.error]="d_referenciaNoValido">
+                        <small *ngIf="d_referenciaNoValido" class="text-danger">
+                          Requerido (2-25) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Código postal</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="d_cp" placeholder="Código postal" formControlName="cp" [class.error]="d_cpNoValido">
+                          <span class="input-group-btn">
+                            <button class="btn btn-info" (click)="validarZipcode(myFormDestino.value.cp,1)">
+                              Buscar
+                            </button>
+                          </span>
+                        </div>
+                        <small *ngIf="d_cpNoValido" class="text-danger">
+                          Requerido (5) (Solo números)
+                        </small>
+                      </div>
+                    </div>
+
+                    <!-- <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Colonia</label>
+                        <select class="form-control" id="d_colonias" formControlName="colonia">
+                          <option disabled selected> -- seleccione una colonia -- </option>
+                          <option *ngFor="let colonia of coloniasD" [value]="colonia">{{colonia}}</option>
+                        </select>
+                      </div>
+                    </div> -->
+
+                    <div class="row">
+                      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                        <div class="form-group">
+                          <label>Colonia</label>
+                          <select class="form-control" id="d_colonias" formControlName="colonia">
+                            <option disabled selected> -- seleccione una colonia -- </option>
+                            <option *ngFor="let colonia of coloniasD" [value]="colonia">{{colonia}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                        <button class="btn btn-social btn-round btn-linkedin" (click)="aCrearColonia(2)">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 form-group">
+                        <label>Municipio</label>
+                        <input type="text" class="form-control" id="d_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="d_ciudadNoValido">
+                        <small *ngIf="d_ciudadNoValido" class="text-danger">
+                          Requerido (2-30)
+                        </small>
+                      </div>
+                      <div class="col-md-6 form-group">
+                        <label>Estado</label>
+                        <input type="text" class="form-control" id="d_estado" placeholder="Estado" formControlName="estado" [class.error]="d_estadoNoValido">
+                        <small *ngIf="d_estadoNoValido" class="text-danger">
+                          Requerido (2-30)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <!-- <div class="col-md-12 form-group">
+                        <div class="checkbox">
+                            <input id="checkbox33" type="checkbox" formControlName="rfc_bandera">
+                            <label for="checkbox33">
+                              RFC
+                            </label>
+                        </div>
+                      </div> -->
+                      <div class="col-md-12 form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="checkbox33" formControlName="rfc_bandera">
+                        <label class="form-check-label" for="checkbox33">&nbsp;&nbsp;RFC</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group" [hidden]="!myFormDestino.value.rfc_bandera">
+                        <label>RFC</label>
+                        <input type="text" class="form-control" id="d_rfc" placeholder="RFC" formControlName="rfc" [class.error]="d_rfcNoValido">
+                        <small *ngIf="d_rfcNoValido" class="text-danger">
+                          Requerido (13) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">           
+                      <div class="demo-radio col-md-12">
+                        <label class="custom-control custom-radio" [hidden]="!myFormDestino.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_dir" formControlName="radios_dir" value="1">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Actualizar dirección</span>
+                        </label>
+                        <label class="custom-control custom-radio" [hidden]="myFormDestino.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_dir" formControlName="radios_dir" value="2">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Guardar como nueva dirección</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group" [hidden]="!myFormDestino.value.guardar && !myFormDestino.value.actualizar">
+                        <label>Álias</label>
+                        <input type="text" class="form-control" id="d_alias" placeholder="Álias" formControlName="alias" [class.error]="d_aliasNoValido">
+                        <small *ngIf="d_aliasNoValido" class="text-danger">
+                          Requerido (2-50) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    
+
+                  </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="flujo != 1" class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <div style="text-align: right;">
+                      <button style="display: inline-block;" class="btn btn-tn btn-primary btn-block" title="Siguiente" (click)="validarDirecciones()">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- flujo 2 -->
+    <div [hidden]="flujo != 2" class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                  
+                    <h4 class="title">Detalles del paquete</h4>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="flujo != 2" class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="header">
+
+                  <h4 class="title">Dimensiones del paquete</h4>
+
+                </div>
+                <div class="content">
+
+                  <form autocomplete="off" [formGroup]="myFormPaquete">
+                    
+
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Libreta de paquetes</label>
+                        <select *ngIf="!corregir" class="form-control" id="paquetes" (change)="changeSetPaquete($event.target.value)">
+                          <option disabled selected> -- paquetes recientes -- </option>
+                          <option *ngFor="let paquete of paquetes" [value]="paquete.id">{{paquete.alias}} - {{paquete.tipo}} {{paquete.largo}}x{{paquete.alto}}x{{paquete.ancho}} - {{paquete.descripcion_producto}} - ${{paquete.valor_mercancia}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Buscar</label>
+                        <input type="text" class="form-control" id="buscar_paquete" placeholder="Buscar..." formControlName="buscar"  >
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="paquetesFilter.length > 0" style="margin-top: -16px;">      
+                        <ul style="height: 150px !important; overflow-x: scroll; background-color: #fff; border : 1px solid #ccc;">
+                          <li > -- Selecciona un paquete -- </li>
+                          <li *ngFor="let item of paquetesFilter"
+                           style="cursor: pointer; margin-top: 5px;"
+                           (click)="changeSetPaquete(item.id)">
+                            {{item.alias}} - {{item.tipo}} {{item.largo}}x{{item.alto}}x{{item.ancho}} - {{item.descripcion_producto}} - ${{item.valor_mercancia}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+
+                    <div class="row show-grid" *ngIf="myFormPaquete.value.tipo == 'Caja' " style="margin-top: 14px;">
+                      <div class="col-md-12 form-group">
+                        <small (click)="openModal2('#modalPaquete')">
+                          <a style="cursor: pointer;" class="text-warning bold">¿Cómo medir mi paquete?</a>
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row show-grid" *ngIf="myFormPaquete.value.tipo == 'Tarima' " style="margin-top: 14px;">
+                      <div class="col-md-12 form-group">
+                        <small (click)="openModal2('#modalTarima')">
+                          <a style="cursor: pointer;" class="text-warning bold">¿Cómo preparar una tarima?</a>
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Paquete</label>
+                        <select class="form-control" id="inputType" formControlName="tipo" (change)="changeType($event.target.value)">
+                          <option [value]="'Caja'" >Caja</option>
+                          <option [value]="'Sobre'" >Sobre</option>
+                          <option [value]="'Tarima'" >Tarima</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Peso <span>KG</span></label>
+                        <div class="input-group">
+                          <div class="input-group-addon">kg</div>
+                          <input type="number" class="form-control" id="inputpeso"
+                          placeholder="Peso KG" formControlName="peso"
+                          [class.error]="pesoNoValido" (keyup)="calcularPesoCotizar()">
+                        </div>
+                        <small *ngIf="pesoNoValido && (myFormPaquete.value.tipo == 'Caja' || myFormPaquete.value.tipo == 'Sobre')" class="text-danger">
+                          Requerido (min 1 - max 70)
+                        </small>
+                        <small *ngIf="pesoNoValido && (myFormPaquete.value.tipo == 'Tarima')" class="text-danger">
+                          Requerido (min 70 - max 1000)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="myFormPaquete.value.tipo == 'Caja' ">
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Largo <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputlargo" placeholder="Largo CM" formControlName="largo" [class.error]="largoNoValido" (keyup)="calcularPesoCotizar()">
+                        <small *ngIf="largoNoValido" class="text-danger">
+                          Requerido (min 1 - max 100)
+                        </small>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Alto <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputalto" placeholder="Alto CM" formControlName="alto" [class.error]="altoNoValido" (keyup)="calcularPesoCotizar()">
+                        <small *ngIf="altoNoValido" class="text-danger">
+                          Requerido (min 1 - max 100)
+                        </small>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Ancho <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputancho" placeholder="Ancho CM" formControlName="ancho" [class.error]="anchoNoValido" (keyup)="calcularPesoCotizar()">
+                        <small *ngIf="anchoNoValido" class="text-danger">
+                          Requerido (min 1 - max 100)
+                        </small>
+                      </div> 
+                    </div>
+                    <div class="row" *ngIf="myFormPaquete.value.tipo == 'Tarima' ">
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Largo <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputlargo" placeholder="Largo CM" formControlName="largo" [class.error]="largoNoValido" (keyup)="calcularPesoCotizar()">
+                        <small *ngIf="largoNoValido" class="text-danger">
+                          Requerido (min 110 - max 1000)
+                        </small>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Alto <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputalto" placeholder="Alto CM" formControlName="alto" [class.error]="altoNoValido" (keyup)="calcularPesoCotizar()">
+                        <small *ngIf="altoNoValido" class="text-danger">
+                          Requerido (min 110 - max 1000)
+                        </small>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 form-group">
+                        <label>Ancho <span>CM</span></label>
+                        <input type="number" class="form-control" id="inputancho" placeholder="Ancho CM" formControlName="ancho" [class.error]="anchoNoValido">
+                        <small *ngIf="anchoNoValido" class="text-danger" (keyup)="calcularPesoCotizar()">
+                          Requerido (min 110 - max 1000)
+                        </small>
+                      </div> 
+                    </div>
+                    
+                    <!-- <br [hidden]="myFormPaquete.value.tipo == 'Sobre' "> -->
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Contenido</label>
+                        <input type="text" class="form-control" id="descripcion" placeholder="Contenido del paquete" formControlName="descripcion" [class.error]="descripcionNoValido">
+                        <small *ngIf="descripcionNoValido" class="text-danger">
+                          Requerido (3-25) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Valor</label>
+                        <input type="number" class="form-control" id="valor_mercancia" placeholder="Valor mercancía en MXN" formControlName="valor_mercancia" [class.error]="valor_mercanciaNoValido">
+                        <small *ngIf="valor_mercanciaNoValido" class="text-danger">
+                          Requerido (min 100 - max 10,000)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">           
+                      <div class="demo-radio col-md-12">
+                        <label class="custom-control custom-radio" [hidden]="!myFormPaquete.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_paquete" formControlName="radios_paquete" value="1">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Actualizar paquete</span>
+                        </label>
+                        <label class="custom-control custom-radio" [hidden]="myFormPaquete.value.actualizar_bandera">
+                          <input type="radio" class="custom-control-input" name="radios_paquete" formControlName="radios_paquete" value="2">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">&nbsp;&nbsp;Guardar como nuevo paquete</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group" [hidden]="!myFormPaquete.value.guardar && !myFormPaquete.value.actualizar">
+                        <label>Álias</label>
+                        <input type="text" class="form-control" id="p_alias" placeholder="Álias" formControlName="alias" [class.error]="p_aliasNoValido">
+                        <small *ngIf="p_aliasNoValido" class="text-danger">
+                          Requerido (2-50) (Solo letras y números)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 14px;">
+                      <div class="col-md-12 form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="checkbox_recoleccion" formControlName="flag_recoleccion" name="flag_recoleccion">
+                        <label class="form-check-label" for="checkbox_recoleccion">&nbsp;&nbsp;Solicitar recolección</label>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 14px;">
+                      <div class="col-md-12 form-group">
+                        <div class="alert alert-warning bold" role="alert">
+                          Si el envío excede las dimensiones o peso declarado, tendrá un contracargo qué se cobrará automáticamente.
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                    
+                </div>
+                <div class="footer">
+                  <small>
+                    El volumen corresponde al espacio que la forma ocupa, por lo tanto, el la multiplicación de la altura por el ancho y el largo.
+                  </small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="header">
+
+                  <!-- <h4 class="title">Datos carta porte</h4> -->
+
+                </div>
+                <div class="content">
+
+                  <form autocomplete="off" [formGroup]="myFormPaquete">
+                    <!-- <div class="row">
+                      <div class="col-md-12 form-group">
+                        <div class="alert alert-warning bold" role="alert">
+                          Introduce los datos para la creación de la carta porte según lo pedido por el SAT <a href="https://www.prodecon.gob.mx/Documentos/bannerPrincipal/2021/31052021complemento_carta_porte.pdf" target="_blank" >clic aquí para más información.</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" id="carta_porteA" placeholder="Nombre del producto" formControlName="carta_porteA" [class.error]="carta_porteANoValido" (blur)="blurCartaPorteA()" >
+                        <small *ngIf="carta_porteANoValido" class="text-danger">
+                          Requerido (3-100)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="catalogoProductos.length > 0" style="margin-top: -16px;">      
+                        <ul style="height: 150px !important; overflow-x: scroll; background-color: #fff; border : 1px solid #ccc;">
+                          <li > -- Selecciona una opción -- </li>
+                          <li *ngFor="let item of catalogoProductos"
+                           style="cursor: pointer; margin-top: 5px;"
+                           (click)="changeSetclaveprodserv(item.c_claveprodserv)">
+                            {{item.c_claveprodserv}}-{{item.descripcion}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Unidad</label>
+                        <input type="text" class="form-control" id="carta_porteB" placeholder="Unidad de medida" formControlName="carta_porteB" [class.error]="carta_porteBNoValido" (blur)="blurCartaPorteB()">
+                        <small *ngIf="carta_porteBNoValido" class="text-danger">
+                          Requerido (3-50)
+                        </small>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="catalogoMedidas.length > 0" style="margin-top: -16px;">      
+                        <ul style="height: 150px !important; overflow-x: scroll; background-color: #fff; border : 1px solid #ccc;">
+                          <li > -- Selecciona una opción -- </li>
+                          <li *ngFor="let item of catalogoMedidas"
+                           style="cursor: pointer;"
+                           (click)="changeSetClaveMedida(item.clave)">
+                            {{item.clave}}-{{item.nombre}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div> -->
+                    <!-- <div class="row">
+                      <div class="col-md-12 form-group">
+                        <label>Valor</label>
+                        <input type="number" class="form-control" id="valor_mercancia" placeholder="Valor mercancía en MXN" formControlName="valor_mercancia" [class.error]="valor_mercanciaNoValido">
+                        <small *ngIf="valor_mercanciaNoValido" class="text-danger">
+                          Requerido (min 100 - max 10,000)
+                        </small>
+                      </div>
+                    </div> -->
+                    <div class="row">
+                      <div class="col-md-12">
+                        <img class="img-fluid" src="https://api.bennuu.mx/images/guia/INTERNOWDOS.jpg" alt="" style="max-width: 100% !important;">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 form-group form-check" style="color: rgba(0,0,0,1); margin-left: 20px; margin-top: 40px">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1" formControlName="terminos">
+                        <label class="form-check-label" for="exampleCheck1" style="cursor: pointer;"> &nbsp;&nbsp;HE LEÍDO Y ACEPTO</label> EL <a style="cursor: pointer;" class="text-warning bold" (click)="terminos()">AVISO DE PRIVACIDAD</a>
+                      </div>
+                      <br>
+                    </div>
+                  </form>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">   
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12"> 
+
+            <div class="card">
+                <div class="header">
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" >
+                      Resumen
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                      <div style="text-align: right;">
+                        <button style="display: inline-block;" class="btn btn-tn btn-info" title="Corregir" (click)="reiniciarCotizacion()">Corregir</button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="content">
+
+                  <h4 class="text-warning bold">Origen</h4>
+                  <ul class="mb-5">
+                    <li>{{myFormRemitente.value.nombre}} {{myFormRemitente.value.apellido}}</li>
+                    <li>{{myFormRemitente.value.empresa}}</li>
+                    <li>{{myFormRemitente.value.telefono}}</li>
+                    <li>{{myFormRemitente.value.calle}} {{myFormRemitente.value.num_exterior}} {{myFormRemitente.value.num_interior}}</li>
+                    <li>{{myFormRemitente.value.cp}}</li>
+                    <li>{{myFormRemitente.value.colonia}}</li>
+                    <li>{{myFormRemitente.value.estado2}}</li>
+                  </ul>
+                  <h4 class="text-warning bold">Destino</h4>
+                  <ul class="mb-5">
+                    <li>{{myFormDestino.value.nombre}} {{myFormDestino.value.apellido}}</li>
+                    <li>{{myFormDestino.value.empresa}}</li>
+                    <li>{{myFormDestino.value.telefono}}</li>
+                    <li>{{myFormDestino.value.calle}} {{myFormDestino.value.num_exterior}} {{myFormDestino.value.num_interior}}</li>
+                    <li>{{myFormDestino.value.cp}}</li>
+                    <li>{{myFormDestino.value.colonia}}</li>
+                    <li>{{myFormDestino.value.estado2}}</li>
+                  </ul>
+                  <div class="row show-grid">
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>Peso masa</div>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>{{myFormPaquete.value.peso}} Kg</div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row show-grid">
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>Peso volumétrico</div>
+                              <!-- <small>
+                                <a href="#" class="text-warning bold">¿Qué es?</a>
+                              </small> -->
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>{{myFormPaquete.value.peso_volumetrico}} Kg</div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row show-grid">
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>Peso a cotizar</div>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                      <div class="card" style="background-color: #e9edf2;">
+                          <div class="content text-center">
+                              <div>{{myFormPaquete.value.peso_cotizar}} Kg</div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div [hidden]="flujo != 2" class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+                    <div style="text-align: right;">
+                      <button style="display: inline-block;" class="btn btn-tn btn-primary btn-block" title="Siguiente" (click)="validarPaquete()">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- flujo 3 -->
+    <div [hidden]="flujo != 3" class="card">
+      <div class="header">
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" >
+            <h4 class="title" style="display: inline-block;">Servicios disponibles</h4>
+            <!-- <button class="btn btn-tn btn-info" title="Cotizar" (click)="cotizar()" style="display: inline-block; margin-left: 5px;">Cotizar</button> -->
+
+            <button  type="button" class="btn btn-icon btn-tn btn-primary" title="Refresh" (click)="cotizar()" style="display: inline-block; margin-left: 5px;">
+              <i class="fa fa-refresh icon-refresh"></i>
+            </button>
+
+          </div>
+          <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" >
+            <div style="text-align: right;">
+              <button style="display: inline-block;" class="btn btn-tn btn-info" title="Imprimir" (click)="printPdf()">Imprimir</button>
+            </div>
+          </div> -->
+        </div>
+
+      </div>
+      <div class="content">
+
+        <div class="row">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12" >
+            <strong>Desde:</strong><br>
+             {{myFormRemitente.value.cp}} {{myFormRemitente.value.ciudad2}} ({{myFormRemitente.value.estado2}})
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12" >
+            <strong>A:</strong><br>
+             {{myFormDestino.value.cp}} {{myFormDestino.value.ciudad2}} ({{myFormDestino.value.estado2}})
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12" >
+            <strong>Paquete:</strong><br>
+             {{myFormPaquete.value.peso_cotizar}}kg {{myFormPaquete.value.largo}}cm x {{myFormPaquete.value.ancho}}cm x {{myFormPaquete.value.alto}}cm
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12" >
+            <button style="display: inline-block;" class="btn btn-tn btn-info" title="Cambiar Búsqueda" (click)="reiniciarCotizacion()">Cambiar Búsqueda</button>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-12" >
+            <div class="alert alert-warning bold" role="alert">
+              Ten en cuenta que el tiempo de entrega puede variar si el código postal de Origen o Destino corresponde a zonas extendidas o puntos alejados a las rutas de las paqueterías.
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row" *ngFor="let item of servicios; index as i" style="margin-bottom: 100px;">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 text-center" >
+            <!-- <div style="margin-top: 10px;">{{item.api_proveedor}}</div> -->
+            <div style="margin-top: 10px;">{{item.proveedor}}</div>        
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 text-center" >
+            <div style="margin-top: 10px;">
+              <img class="img-fluid" src="{{item.imagen}}" alt="" style="max-width: 80% !important;">
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 text-center" >
+            <!-- <div style="margin-top: 10px;">Tarifa {{item.servicio_tipo_aux}}</div> -->
+            <div style="margin-top: 10px;">{{item.nombre_mostrar}}</div>
+            <div style="margin-top: 10px;">{{item.detalle}}</div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 text-center" >
+            <div style="margin-top: 10px;">
+              Precio {{item.total}} MXN
+            </div>
+            <div style="margin-top: 10px; align-items: center; display: flex; justify-content: center;">
+              <button class="btn btn-tn btn-info btn-block" title="Seleccionar" (click)="seleccionarServicio(item)" style="max-width: 80% !important;">Seleccionar</button>
+            </div>
+            
+          </div>
+          <hr>
+        </div>
+      </div>
+    </div>
+
+    <!-- flujo 4 -->
+    <div [hidden]="flujo != 4" class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="content">
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" >
+                      <h4 class="title">Métodos de pago</h4>
+                    </div>
+                    <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                      <div style="text-align: right;">
+                        <button style="display: inline-block;" class="btn btn-tn btn-primary" title="Nuevo envío" (click)="reiniciarCotizacion()">Nuevo envío</button>
+                      </div>
+                    </div> -->
+                  </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div [hidden]="flujo != 4" class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+
+          <div class="card">
+              <div class="header">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" >
+                    <h4 class="title">Pago con Saldo</h4>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <div style="text-align: right;">
+                      <button *ngIf="user_subusuario == null" style="display: inline-block;" class="btn btn-tn btn-primary" title="Recargar" (click)="recargarSaldo()">Recargar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+
+                <p>Tu saldo es {{saldo | number: '1.2-2'}} MXN</p>
+                <br>
+                <button type="button" class="btn btn-tn btn-primary" (click)="pagarConSaldo()">Pagar</button>
+
+              </div>
+          </div> 
+
+          <div class="card">
+              <div class="header">
+                <div class="row">
+                  <div class="col-md-12" >
+                    <h4 class="title">Pago con Tarjeta de Débito/Crédito</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+
+                <form autocomplete="off" [formGroup]="paymentForm">
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label>
+                        <small class="text-invalid bold">
+                          En pago con tarjeta se tiene un incremento del 4%
+                        </small>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label>Nombre del titular</label>
+                      <input type="text" class="form-control" id="name" placeholder="Como aparece en la tarjeta" formControlName="name" [ngClass]="{'danger': formErrors.name}">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label>Número de tarjeta</label>
+                      <input type="number" class="form-control" id="numero" formControlName="number" [ngClass]="{'danger': formErrors.number}">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label>Fecha de expiración</label>
+                    </div>
+                  </div>  
+                  <div class="row">
+                    <div class="col-md-4 form-group">
+                      <label>&nbsp;</label>
+                      <input type="number" class="form-control" id="exp_month" placeholder="Mes (2 dígitos)" formControlName="exp_month" [ngClass]="{'danger': formErrors.exp_month}">
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <label>&nbsp;</label>
+                      <input type="number" class="form-control" id="exp_year" placeholder="Año (2 dígitos)" formControlName="exp_year" [ngClass]="{'danger': formErrors.exp_year}">
+                    </div>
+                    <div class="col-md-4 form-group">
+                      <label>CVV</label>
+                      <input type="number" class="form-control" id="cvc" placeholder="123" formControlName="cvc" [ngClass]="{'danger': formErrors.cvc}">
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col-12 form-group">
+                      <label>¿Deseas guardar la información de tu tarjeta para próximas compras?</label>
+                      <br>
+                      <nb-checkbox formControlName="check">Guarda tarjeta</nb-checkbox>
+                    </div>
+                  </div> -->
+                  <br>
+                  <button type="button" class="btn btn-tn btn-primary" (click)="pagar(paymentForm)">Pagar</button>
+                </form> 
+
+              </div>
+          </div>
+
+          <div class="card">
+              <div class="header">
+                <div class="row">
+                  <div class="col-md-12" >
+                    <h4 class="title">Pago con PayPal</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+
+                <div class="row">
+                  <div class="col-md-12 form-group">
+                    <label>
+                      <small class="text-invalid bold">
+                        En pago con PayPal se tiene un incremento de 5 MXN + 5%
+                      </small>
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <br>
+                  <div class="col-12" style="text-align: center;margin-top: 10px;">
+                    <div id="paypal-button"></div>        
+                  </div>  
+                  <br><br>         
+                </div>
+
+              </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">   
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+
+          <div class="card">
+              <div class="header">
+                <div class="row">
+                  <div class="col-md-12" >
+                    <h4 class="title">Resumen</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+
+                <h4 class="text-warning bold">Servicio</h4>
+                <ul class="mb-5">
+                  <li>Proveedor {{resumenPago.proveedor}}</li>
+                  <li style="margin-top: 10px; margin-bottom: 10px;">
+                    <img class="img-fluid" src="{{resumenPago.imagen}}" alt="" style="max-width: 60% !important;">
+                  </li>
+                  <li>Tarifa {{resumenPago.servicio_tipo_aux}}</li>
+                  <li>Detalle {{resumenPago.detalle}}</li>
+                  <li><strong>Total {{resumenPago.total}} MXN</strong></li>
+                </ul>
+                <h4 class="text-warning bold">Paquete</h4>
+                <ul class="mb-5">
+                  <li>Tipo {{resumenPago.tipo}}</li>
+                  <li>Peso {{resumenPago.peso}} Kg</li>
+                  <li>Dimensiones {{resumenPago.largo}}cm x {{resumenPago.ancho}}cm x {{resumenPago.alto}}cm</li>
+                </ul>
+                <h4 class="text-warning bold">Origen</h4>
+                <ul class="mb-5">
+                  <li>{{resumenPago.nombreR}}</li>
+                  <li>{{resumenPago.empresaR}}</li>
+                  <li>{{resumenPago.telefonoR}}</li>
+                  <li>{{resumenPago.direccionR}}</li>
+                  <li>{{resumenPago.cpR}}</li>
+                  <li>{{resumenPago.coloniaR}}</li>
+                  <li>{{resumenPago.estadoR}}</li>
+                </ul>
+                <h4 class="text-warning bold">Destino</h4>
+                <ul class="mb-5">
+                  <li>{{resumenPago.nombreD}}</li>
+                  <li>{{resumenPago.empresaD}}</li>
+                  <li>{{resumenPago.telefonoD}}</li>
+                  <li>{{resumenPago.direccionD}}</li>
+                  <li>{{resumenPago.cpD}}</li>
+                  <li>{{resumenPago.coloniaD}}</li>
+                  <li>{{resumenPago.estadoD}}</li>
+                </ul>
+
+              </div>
+          </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPaquete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Info</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12" style="text-align: center;">
+            <img class="img-fluid" src="https://api.bennuu.mx/images/guia/CAJA.jpg" alt="" style="max-width: 70% !important;">
+          </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalTarima" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Info</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12" >
+              <p><strong>¿Cómo preparar una tarima para un envío exitoso?</strong></p>
+              <p style="margin-top: 20px;"><strong>¿Qué es una tarima?</strong></p>
+              <p>Una <strong>tarima, palet, o pallet</strong> es un armazón de madera, plástico u otro material empleado en el movimiento de carga y que facilita el levantamiento de la misma con pequeñas grúas.</p>
+
+              <strong style="margin-top: 20px;">Recomendaciones</strong>
+              <p>Para que no tengas ningún problema al momento de realizar tu envío, es importante que tengas en cuenta lo siguiente:</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="display: flex;
+                justify-content: center;
+                align-items: center;">
+            <img src="https://api.bennuu.mx/images/guia/tarima.jpg" alt="Imagen de tarimas preparadas para envío" style="width: 100%;">
+          </div>
+          <div class="col-md-6" style="display: flex;
+                justify-content: center;
+                align-items: center;">
+            <ol>
+                <li>El paquete que envíes tiene que estar arriba de la tarima</li>
+                <li>Tu paquete tiene que estar empleado (envuelto en plástico)</li>
+                <li>Debe de contar con flejes para sujetar la carga</li>
+            </ol>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-md-12" >
+              <div class="alert alert-warning bold" role="alert">
+                De no realizar lo anterior correctamente la tarima no podrá ser enviada
+              </div>
+          </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSobrepesos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+      <h4 class="modal-title" id="myModalLabel">Info</h4>
+    </div>
+    <div class="modal-body">
+
+        <p>Tienes cargos adicionales pendientes por pagar.</p>
+        <!-- <p>Paga los sobrepesos pendientes para poder seguir generando nuevos envíos.</p> -->
+        <br>
+        <div class="row">
+          <div class="col-md-12" style="text-align: center;">
+            <button class="btn btn-tn btn-primary btn-with-icon" (click)="irSobrepesos()">Ver cargos adicionales <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPagoPendiente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+      <h4 class="modal-title" id="myModalLabel">Info</h4>
+    </div>
+    <div class="modal-body">
+
+        <p>Tienes un pago pendiente.</p>
+        <p>Detalles:</p>
+        <br>
+        <div class="row">
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <h4 class="text-warning bold">Origen</h4>
+            <ul class="mb-5">
+              <li>{{resumenPago.nombreR}}</li>
+              <li>{{resumenPago.empresaR}}</li>
+              <li>{{resumenPago.telefonoR}}</li>
+              <li>{{resumenPago.direccionR}}</li>
+              <li>{{resumenPago.cpR}}</li>
+              <li>{{resumenPago.coloniaR}}</li>
+              <li>{{resumenPago.estadoR}}</li>
+            </ul>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <h4 class="text-warning bold">Destino</h4>
+            <ul class="mb-5">
+              <li>{{resumenPago.nombreD}}</li>
+              <li>{{resumenPago.empresaD}}</li>
+              <li>{{resumenPago.telefonoD}}</li>
+              <li>{{resumenPago.direccionD}}</li>
+              <li>{{resumenPago.cpD}}</li>
+              <li>{{resumenPago.coloniaD}}</li>
+              <li>{{resumenPago.estadoD}}</li>
+            </ul>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <h4 class="text-warning bold">Paquete</h4>
+            <ul class="mb-5">
+              <li>Tipo {{resumenPago.tipo}}</li>
+              <li>Peso {{resumenPago.peso}} Kg</li>
+              <li>Dimensiones {{resumenPago.largo}}cm x {{resumenPago.ancho}}cm x {{resumenPago.alto}}cm</li>
+            </ul>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
+            <h4 class="text-warning bold">Servicio</h4>
+            <ul class="mb-5">
+              <li>Proveedor {{resumenPago.proveedor}}</li>
+              <li style="margin-top: 10px; margin-bottom: 10px;">
+                <img class="img-fluid" src="{{resumenPago.imagen}}" alt="" style="max-width: 60% !important;">
+              </li>
+              <li>Tarifa {{resumenPago.servicio_tipo_aux}}</li>
+              <li>Detalle {{resumenPago.detalle}}</li>
+              <li><strong>Total {{resumenPago.total}} MXN</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12" style="text-align: center;">
+            <button class="btn btn-tn btn-primary" (click)="irPagoPendiente()">Pagar
+            </button>
+            &nbsp;O&nbsp;
+            <button class="btn btn-tn btn-primary" (click)="irNuevaCotizacion()">Nuevo Envío
+            </button>
+          </div>
+        </div>
+
+        
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div> -->
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalTerminos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+      <h4 class="modal-title" id="myModalLabel">Aviso de Privacidad</h4>
+    </div>
+    <div class="modal-body" style="height: 70vh; overflow-y: scroll; overflow-x: hidden;">
+
+        
+      <p>Aviso de Privacidad</p>
+      <p>&uacute;ltima actualizaci&oacute;n: 06 de mayo de 2024</p>
+      <p>De conformidad con lo dispuesto por la Ley Federal de Protecci&oacute;n de Datos Personales en Posesi&oacute;n de los Particulares (en lo sucesivo la &ldquo;Ley&rdquo;), del Reglamento de la Ley Federal de Protecci&oacute;n de Datos Personales en Posesi&oacute;n de los Particulares (en lo sucesivo el &ldquo;Reglamento&rdquo;) y de los Lineamientos del Aviso de Privacidad (en lo sucesivo los &ldquo;Lineamientos&rdquo; y conjuntamente con la Ley y el Reglamento, la &ldquo;Regulaci&oacute;n de Privacidad&rdquo;) se emite el presente Aviso de Privacidad (en lo sucesivo el &ldquo;Aviso de Privacidad&rdquo;) conforme a los siguientes t&eacute;rminos y condiciones:</p>
+      <p><br></p>
+      <p>A. RESPONSABLE DE LA PROTECCI&Oacute;N DE SUS DATOS PERSONALES.</p>
+      <p><br></p>
+      <p>David Usiel Le&oacute;n Barraza(en lo sucesivo la &ldquo;Sociedad&rdquo;) es responsable del tratamiento de sus datos personales, la cual tiene su domicilio en Misi&oacute;n de San Juan Bautista 2310 Fracc Nueva Galicia en Culiac&aacute;n Sinaloa (en lo sucesivo el &ldquo;Domicilio de la Sociedad&rdquo;), su correo electr&oacute;nico es <a data-fr-linked="true" href="mailto:hola@bennuu.mx">hola@bennuu.mx</a> en lo sucesivo el &ldquo;Correo de la Sociedad&rdquo;) y su tel&eacute;fono es el (667) 2040931 en lo sucesivo el &ldquo;Tel&eacute;fono de la Sociedad&rdquo;). Igualmente, usted puede contactar a la persona encargada (en lo sucesivo el &ldquo;Encargado&rdquo;) del Departamento de Datos Personales de la Sociedad en el (i) Domicilio de la Sociedad; (ii) Correo de la Sociedad; o (iii) Tel&eacute;fono de la Sociedad.</p>
+      <p><br></p>
+      <p>B. DATOS QUE SE RECABAR&Aacute;N.</p>
+      <p><br></p>
+      <p>Datos de identificaci&oacute;n:</p>
+      <p>Nombre completo.</p>
+      <p>Correo electr&oacute;nico.</p>
+      <p>Tel&eacute;fono.</p>
+      <p>Domicilio.</p>
+      <p>Tarjeta de cr&eacute;dito o d&eacute;bito.</p>
+      <p>C. FINALIDAD CON QUE SE RECABAR&Aacute;N Y UTILIZAR&Aacute;N SUS DATOS PERSONALES.</p>
+      <p><br></p>
+      <p>Para otorgar el servicio, as&iacute; como para llevar un orden del pago de los servicios.</p>
+      <p><br></p>
+      <p>D. A TRAV&Eacute;S DE QUE MEDIOS OBTENEMOS DATOS PERSONALES DE USTED.</p>
+      <p><br></p>
+      <p>Para las finalidades se&ntilde;aladas en el Aviso de Privacidad podemos recabar sus datos personales de distintas maneras, cuando (i) usted nos los proporciona directamente; (ii) usted visita nuestro sitio de Internet o utiliza nuestros servicios en l&iacute;nea; y (iii) obtenemos informaci&oacute;n a trav&eacute;s de otras fuentes que est&aacute;n permitidas por la Regulaci&oacute;n de Privacidad.</p>
+      <p><br></p>
+      <p>Dentro de las herramientas de captura autom&aacute;tica de datos utilizadas por la Sociedad en sus sitios de Internet o servicios en l&iacute;nea se encuentran las cookies y las web beacons, las cuales sirven para recabar en que sitios de Internet de la Sociedad se realiza alg&uacute;n registro, la finalidad por la cual se recaban estos datos es para registrar el comportamiento de la navegaci&oacute;n en l&iacute;nea.</p>
+      <p><br></p>
+      <p>Usted puede restringir, bloquear o borrar las cookies de los sitios de nuestro Aviso de Privacidad o cualquier otra p&aacute;gina web, utilizando su navegador. En cada navegador la operativa es diferente, la funci&oacute;n de Ayuda de su navegador le mostrar&aacute; c&oacute;mo hacerlo.</p>
+      <p><br></p>
+      <p>E. CONSENTIMIENTO T&Aacute;CITO DEL TRATAMIENTO DE SUS DATOS PERSONALES.</p>
+      <p><br></p>
+      <p>Si usted no manifiesta su oposici&oacute;n para que sus datos personales sean tratados, se entender&aacute; que ha otorgado su consentimiento para ello. Sin embargo, en caso de que usted no consienta que sus datos personales sean tratados en los t&eacute;rminos que se&ntilde;ala el Aviso de Privacidad, favor de indicarlo en la opci&oacute;n respectiva en el momento en que se est&eacute; registrando como cliente de la Sociedad por el medio que corresponda.</p>
+      <p><br></p>
+      <p>F. SOBREPESOS</p>
+      <p><br></p>
+      <p>Al generar un env&iacute;o con peso excesivo al originalmente registrado al momento de la creaci&oacute;n de gu&iacute;a, dicho peso ser&aacute; cobrado al cliente y ser&aacute; clasificado como sobrepeso.</p>
+      <p><br></p>
+      <p>El costo por penalizaci&oacute;n por kilo adicional al declarado es de $35 pesos, Bennuu se reserva el derecho de suspender o eliminar definitivamente, las cuentas que presenten m&aacute;s de $1,500 pesos de adeudo.</p>
+      <p><br></p>
+      <p>En caso de presentar un saldo mayor a $1,500 pesos de adeudo, las cuentas ser&aacute;n desactivadas y deber&aacute;n liquidar el adeudo para poder utilizar el servicio nuevamente.</p>
+      <p><br></p>
+      <p>G. LIMITACI&Oacute;N DEL USO DE SUS DATOS PERSONALES.</p>
+      <p><br></p>
+      <p>Usted puede dejar de recibir informaci&oacute;n de cualquier naturaleza de la Sociedad, ya sea personalmente, a trav&eacute;s de correo electr&oacute;nico o de manera telef&oacute;nica, dando una notificaci&oacute;n al Encargado del Departamento de Datos Personales de la Sociedad en el (i) Domicilio de la Sociedad; (ii) Correo de la Sociedad; o (iii) Tel&eacute;fono de la Sociedad.</p>
+      <p><br></p>
+      <p>Para mayor informaci&oacute;n, favor de comunicarse con el Encargado del Departamento de Datos Personales de la Sociedad al (i) Tel&eacute;fono de la Sociedad; o (ii) Correo de la Sociedad.</p>
+      <p><br></p>
+      <p>H. EJERCICIO DE SUS DERECHOS DE ACCESO, RECTIFICACI&Oacute;N, CANCELACI&Oacute;N Y OPOSICI&Oacute;N.</p>
+      <p><br></p>
+      <p>Usted tiene derecho a (i) acceder a sus datos personales que poseemos y a los detalles del tratamiento de los mismos; (ii) rectificar sus datos personales en caso de ser inexactos o incompletos; (iii) cancelar sus datos personales cuando considere que no se requieren para alguna de las finalidades se&ntilde;aladas en el Aviso de Privacidad, est&eacute;n siendo utilizados para finalidades no consentidas o haya finalizado la relaci&oacute;n comercial; u (iv) oponerse al tratamiento de sus datos personales para fines espec&iacute;ficos (en lo sucesivo conjuntamente, los &ldquo;Derechos ARCO&rdquo;).</p>
+      <p><br></p>
+      <p>Los mecanismos que se han implementado para el ejercicio de los Derechos ARCO son a trav&eacute;s de la presentaci&oacute;n de la solicitud que le proporcione el Encargado del Departamento de Datos Personales de la Sociedad (i) en el Domicilio de la Sociedad; o (ii) a trav&eacute;s del Correo de la Sociedad, conforme a lo siguiente:</p>
+      <p><br></p>
+      <p>1. Su solicitud deber&aacute; contener la siguiente informaci&oacute;n: (i) El nombre y domicilio completos del titular de los datos personales, su correo electr&oacute;nico u otro medio para comunicarle la respuesta a su solicitud; (ii) los documentos que acrediten la identidad o, en su caso, la representaci&oacute;n legal del titular; (iii) la descripci&oacute;n clara y precisa de los datos personales respecto de los que se busca ejercer alguno de los Derechos ARCO; (iv) el lugar y la fecha en que se genera y entrega la solicitud de ejercicio de los Derechos ARCO a la Sociedad; (v) firma del titular de los datos personales; y (vi) referencia o indicaci&oacute;n de la informaci&oacute;n original del titular de los datos personales. Lo anterior en el entendido de que si el titular de los datos personales no cumple con la entrega de lo establecido en los incisos del (i) al (vi) anteriores, su solicitud de ejercicio de los Derechos ARCO se tendr&aacute; por no solicitada a la Sociedad.</p>
+      <p><br></p>
+      <p>2. En un plazo m&aacute;ximo de 20 d&iacute;as h&aacute;biles atenderemos su solicitud y le informaremos de manera gratuita sobre la procedencia de la misma, en los t&eacute;rminos de la Ley, a trav&eacute;s de una notificaci&oacute;n al titular de los datos personales a su (i) domicilio; o (ii) correo electr&oacute;nico. En caso de resultar procedente su solicitud, &eacute;sta deber&aacute; hacerse efectiva en un plazo m&aacute;ximo de 15 d&iacute;as h&aacute;biles a partir de la fecha en que se comunique la respuesta a la misma.</p>
+      <p><br></p>
+      <p>Para mayor informaci&oacute;n, favor de comunicarse con el Encargado del Departamento de Datos Personales de la Sociedad al (i) Tel&eacute;fono de la Sociedad; o (ii) Correo de la Sociedad.</p>
+      <p><br></p>
+      <p>I. REVOCACI&Oacute;N DE CONSENTIMIENTO PARA EL TRATAMIENTO DE SUS DATOS PERSONALES.</p>
+      <p><br></p>
+      <p>En todo momento, usted podr&aacute; revocar el consentimiento que ha otorgado a la Sociedad para el tratamiento de sus datos personales, a fin de que dejemos de hacer uso de los mismos.</p>
+      <p><br></p>
+      <p>Su solicitud deber&aacute; ser presentada (i) en el Domicilio de la Sociedad; o (ii) a trav&eacute;s del Correo de la Sociedad.</p>
+      <p><br></p>
+      <p>Asimismo, su solicitud deber&aacute; acompa&ntilde;arse de la siguiente informaci&oacute;n: (i) El nombre y domicilio completos del titular de los datos personales, su correo electr&oacute;nico u otro medio para comunicarle la respuesta a su solicitud; (ii) los documentos que acrediten la identidad o, en su caso, la representaci&oacute;n legal del titular; (iii) la descripci&oacute;n clara y precisa de los datos personales respecto de los que se busca revocar el consentimiento que se ha otorgado a la Sociedad para el tratamiento de los mismos; (iv) el lugar y la fecha en que se genera y entrega la solicitud de revocaci&oacute;n de consentimiento a la Sociedad para el tratamiento de los datos personales; (v) firma del titular de los datos personales; y (vi) referencia o indicaci&oacute;n de la informaci&oacute;n original del titular de los datos personales. Lo anterior en el entendido de que si el titular de los datos personales no cumple con la entrega de lo establecido en los incisos del (i) al (vi) anteriores, su solicitud de revocaci&oacute;n de consentimiento se tendr&aacute; por no solicitada a la Sociedad.</p>
+      <p><br></p>
+      <p>En un plazo m&aacute;ximo de 20 d&iacute;as h&aacute;biles atenderemos su solicitud y le informaremos de manera gratuita sobre la procedencia de la misma, en los t&eacute;rminos de la Ley, a trav&eacute;s de una notificaci&oacute;n al titular de los datos personales a su (i) domicilio; o (ii) correo electr&oacute;nico. En caso de resultar procedente su solicitud, &eacute;sta deber&aacute; hacerse efectiva en un plazo m&aacute;ximo de 15 d&iacute;as h&aacute;biles a partir de la fecha en que se comunique la respuesta a la misma.</p>
+      <p><br></p>
+      <p>Para mayor informaci&oacute;n, favor de comunicarse con el Encargado del Departamento de Datos Personales de la Sociedad al (i) Tel&eacute;fono de la Sociedad; o (ii) Correo de la Sociedad.</p>
+      <p><br></p>
+      <p>J. SEGURIDAD DE LA INFORMACI&Oacute;N.</p>
+      <p><br></p>
+      <p>La Sociedad como empresa responsable del tratamiento y resguardo de los datos personales de los titulares, cuenta con procedimientos f&iacute;sicos, electr&oacute;nicos y administrativos para proteger la informaci&oacute;n personal contra destrucci&oacute;n accidental o legal, p&eacute;rdida o alteraci&oacute;n ilegal y divulgaci&oacute;n o acceso no autorizado.</p>
+      <p><br></p>
+      <p>K. MODIFICACIONES AL AVISO DE PRIVACIDAD.</p>
+      <p><br></p>
+      <p>Nos reservamos el derecho de efectuar en cualquier momento modificaciones o actualizaciones al Aviso de Privacidad, para la atenci&oacute;n de reformas legislativas, novedades jurisprudenciales, pol&iacute;ticas internas o nuevos requerimientos para el ofrecimiento de nuestros productos y pr&aacute;cticas del mercado.</p>
+      <p><br></p>
+      <p>Estas modificaciones estar&aacute;n disponibles al p&uacute;blico a trav&eacute;s de nuestra p&aacute;gina de Internet, en la secci&oacute;n de Aviso de Privacidad.</p>
+      <p><br></p>
+      <p>L. LEGISLACI&Oacute;N APLICABLE, JURISDICCI&Oacute;N Y COMPETENCIA.</p>
+      <p><br></p>
+      <p>El Aviso de Privacidad se rige por la Regulaci&oacute;n de Privacidad y las dem&aacute;s disposiciones federales legales aplicables vigentes en M&eacute;xico. La aceptaci&oacute;n del Aviso de Privacidad implica su sometimiento expreso a los tribunales competentes en la Ciudad de Culiac&aacute;n, Estado de Sinaloa, M&eacute;xico, para cualquier controversia o reclamaci&oacute;n derivada del mismo.</p>
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+

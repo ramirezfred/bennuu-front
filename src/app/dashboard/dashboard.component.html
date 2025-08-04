@@ -1,0 +1,88 @@
+<div class="main-content" id="id_scroll">
+    <div class="container-fluid"> 
+
+        
+
+        <div class="row">
+            <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
+                <ngx-charts-number-card
+                  [scheme]="colorScheme1"
+                  [results]="single1">
+                </ngx-charts-number-card>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+
+                        <div style="position: absolute; top: 0px; right:15px;" >
+                          <button  type="button" class="btn btn-icon btn-tn btn-primary" title="Refresh" (click)="getDiagram4()">
+                            <i class="fa fa-refresh icon-refresh"></i>
+                          </button>
+                        </div>
+
+                    </div>
+                    <div class="content">
+
+                        <div style="text-align: center;" class="row">
+                          <div class="col-md-12">
+                            <h4 class="title">Envíos por mes</h4>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div style="margin-top: 10px" class="col-md-12" *ngIf="radioModelD4 != 'left'">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Mes</label>
+                                  <select id="mes" name="mes" class="form-control" [(ngModel)]="mesD4">
+                                    <option [value]="mes" *ngFor ="let mes of meses">{{mes}}</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Año</label>
+                                  <select id="anio" name="anio" class="form-control" [(ngModel)]="anioD4">
+                                    <option [value]="anio" *ngFor ="let anio of years">{{anio}}</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
+                                <ngx-charts-bar-vertical
+                                  [scheme]="colorScheme2"
+                                  [results]="single2"
+                                  [gradient]="gradient2"
+                                  [xAxis]="showXAxis2"
+                                  [yAxis]="showYAxis2"
+                                  [showXAxisLabel]="showXAxisLabel2"
+                                  [showYAxisLabel]="showYAxisLabel2"
+                                  [xAxisLabel]="xAxisLabel2"
+                                  [yAxisLabel]="yAxisLabel2">
+                                </ngx-charts-bar-vertical>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+        
+
+  
+    </div>
+
+    
+</div>
+
+

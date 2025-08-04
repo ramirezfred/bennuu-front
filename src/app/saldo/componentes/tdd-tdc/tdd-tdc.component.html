@@ -1,0 +1,68 @@
+<form autocomplete="off" [formGroup]="paymentForm">
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <label>
+        <small class="text-invalid bold">
+          En pago con tarjeta se tiene un incremento del 4%
+        </small>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <label>Monto a recargar</label>
+      <div class="input-group">
+        <div class="input-group-addon">MXN</div>
+        <input type="number" class="form-control" id="inputmonto"
+        placeholder="Monto" formControlName="monto"
+        [class.control-invalid]="montoNoValido">
+      </div>
+      <small *ngIf="montoNoValido" class="text-invalid">
+        Campo requerido
+      </small>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <label>Nombre del titular</label>
+      <input type="text" class="form-control" id="name" placeholder="Como aparece en la tarjeta" formControlName="name" [ngClass]="{'danger': formErrors.name}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <label>Número de tarjeta</label>
+      <input type="number" class="form-control" id="numero" formControlName="number" [ngClass]="{'danger': formErrors.number}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <label>Fecha de expiración</label>
+    </div>
+  </div>  
+  <div class="row">
+    <div class="col-md-4 form-group">
+      <label>&nbsp;</label>
+      <input type="number" class="form-control" id="exp_month" placeholder="Mes (2 dígitos)" formControlName="exp_month" [ngClass]="{'danger': formErrors.exp_month}">
+    </div>
+    <div class="col-md-4 form-group">
+      <label>&nbsp;</label>
+      <input type="number" class="form-control" id="exp_year" placeholder="Año (2 dígitos)" formControlName="exp_year" [ngClass]="{'danger': formErrors.exp_year}">
+    </div>
+    <div class="col-md-4 form-group">
+      <label>CVV</label>
+      <input type="number" class="form-control" id="cvc" placeholder="123" formControlName="cvc" [ngClass]="{'danger': formErrors.cvc}">
+    </div>
+  </div>
+  <!-- <div class="row">
+    <div class="col-12 form-group">
+      <label>¿Deseas guardar la información de tu tarjeta para próximas compras?</label>
+      <br>
+      <nb-checkbox formControlName="check">Guarda tarjeta</nb-checkbox>
+    </div>
+  </div> -->
+  <br>
+  <button type="button" class="btn btn-tn btn-primary" (click)="pagar(paymentForm)">Pagar</button>
+</form>
+
+
+

@@ -1,0 +1,17 @@
+.btn-flotante {
+	color:#25D366;
+	font-size:70px;
+
+	cursor: pointer;
+	    
+	position: fixed;
+	bottom: 15px;
+	right: 50px;
+	transition: all 300ms ease 0ms;
+	/*box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);*/
+	z-index: 99;
+}
+.btn-flotante:hover {
+	/*box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);*/
+	transform: translateY(-7px);
+}

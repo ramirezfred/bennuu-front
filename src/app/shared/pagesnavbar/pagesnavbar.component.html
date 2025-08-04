@@ -1,0 +1,51 @@
+<nav #pagesnavbar class="navbar navbar-primary navbar-transparent navbar-absolute">
+    <div class="container">
+        <div class="navbar-header">
+            <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> -->
+            <!-- <div class="logo" style="width: 60px;">
+                <a href="javascript:void(0)" class="simple-text logo-mini">
+                    <div class="logo-img">
+                        <img src="../../assets/img/vector-logo-cimmytree.svg"/>
+                    </div>
+                </a>
+                <a href="javascript:void(0)" class="simple-text logo-normal">
+                    CIMMYTREE
+                </a>
+            </div> -->
+            <a class="navbar-brand" routerLinkActive="active" [routerLink]="['/pages/login']">BENNUU</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- <li>
+                    <a routerLinkActive="active" [routerLink]="['/dashboard']">
+                        <i class="fa fa-tachometer" aria-hidden="true"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li> -->
+                <li>
+                    <a routerLinkActive="active" (click)="logout()">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        <p>Login</p>
+                    </a>
+                </li>
+                <!-- <li>
+                    <a routerLinkActive="active" [routerLink]="['/pages/register']">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        <p>Register</p>
+                    </a>
+                </li>
+                <li>
+                    <a routerLinkActive="active" [routerLink]="['/pages/lock']">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <p>Lock Screen</p>
+                    </a>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</nav>

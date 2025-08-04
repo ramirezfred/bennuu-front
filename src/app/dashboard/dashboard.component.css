@@ -1,0 +1,48 @@
+
+
+@media ( max-width: 30em){ /* 30 x 16px = 480px */
+
+        .mi-tabla-movil table {
+            width: 100%;
+            font-size: .9em;
+        }
+        .mi-tabla-movil table tr {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc !important;
+            padding: 1em;
+            margin-bottom: 1em;
+
+        }
+        .mi-tabla-movil table td, table th{
+            border: none;
+        }
+        .mi-tabla-movil table td[data-titulo]{
+            display: flex;
+        }
+        .mi-tabla-movil table td[data-titulo]::before{
+            content: attr( data-titulo );
+            width: 90px;
+            font-weight: bold;
+        }
+        .mi-tabla-movil table thead {
+            display: none;
+        }
+
+        .mi-chart-container-movil {
+            min-height: 500px;
+        }
+
+        .mi-chart-container-movil2 {
+            height: 400px;
+            width: 94%;
+        }
+
+    
+}
+
+
+
+
+
+

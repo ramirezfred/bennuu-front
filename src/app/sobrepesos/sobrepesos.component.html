@@ -1,0 +1,152 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Cargos adicionales</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th >Usuario</th>
+                                <th >Origen</th>
+                                <th >Destino</th>
+                                <th >Tipo</th>
+                                <th >Paquetería</th>
+                                <th >Guía</th>
+                                <th >Estado</th>
+                                <th >Total guía<small>(MXN)</small></th>
+                                <th >Obs.</th>
+                                <th >Estado SP</th>
+                                <th >Total SP<small>(MXN)</small></th>
+                                <th >Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                
+                                <td data-titulo="User" style="white-space: normal; word-break: break-word;">
+                                  {{item.usuario.email}}
+                                </td>
+                                <td data-titulo="Origen">
+                                  <div>{{item.guia.remitente.nombre}} {{item.guia.remitente.apellido}}</div>
+                                  <div>&nbsp;{{item.guia.remitente.cp}}</div>
+                                </td>
+                                <td data-titulo="Destino">
+                                  <div>{{item.guia.destino.nombre}} {{item.guia.destino.apellido}}</div>
+                                  <div>&nbsp;{{item.guia.destino.cp}}</div>
+                                </td>
+                                <td data-titulo="Tipo">
+                                  <div>{{item.guia.paquete.tipo}}</div>
+                                  <div>&nbsp;{{item.guia.paquete.peso}} <small>Kg</small></div>
+                                </td>
+                                <td data-titulo="Paquetería">
+                                  <div>{{item.guia.proveedor}}</div>
+                                  <div>&nbsp;{{item.guia.servicio_tipo_aux}}</div>
+                                </td>
+                                <td data-titulo="Guía">
+                                  <!-- <a href="{{item.rastreo}}" target="_blank" class="text-primary bold">{{item.guia}}</a> -->
+                                  {{item.guia.guia}}
+                                </td>
+                                <td data-titulo="Estado" >{{item.guia.estado}}</td>
+                                <td data-titulo="Tot. Guía">{{item.guia.total}}</td>
+                                <td data-titulo="Obs.">{{item.observaciones}}</td>
+                                <td data-titulo="Estado SP">{{item.estado}}</td>
+                                <td data-titulo="Tot. SP">{{item.total}}</td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button *ngIf=" item.estado != 'Pagado' " type="button" class="btn btn-tn btn-primary" title="Pagar sobrepeso" (click)="aPagar(item)">Pagar</button>
+                                      <button *ngIf="item.estado == 'Pagado'"
+                                        [disabled]="true"
+                                       type="button" class="btn btn-tn btn-warning" title="Sobrepeso pagado" >Pagado</button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalRecargar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Info</h4>
+    </div>
+    <div class="modal-body">
+
+        <p>No dispones del saldo suficiente para pagar el sobrepeso.</p>
+        <p>Recarga y el sobrepeso automáticamente será pagado.</p>
+        <br>
+        <div class="row">
+          <div class="col-md-12" style="text-align: center;">
+            <button class="btn btn-tn btn-primary btn-with-icon" (click)="irRecargar()">Recargar <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>

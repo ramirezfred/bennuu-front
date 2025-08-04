@@ -1,0 +1,173 @@
+<div class="wrapper wrapper-full-page">
+    <div class="full-page register-page" data-color="green" data-image="../../../assets/img/full-screen-image-2.jpg">
+
+    <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="header-text">
+
+                            <div class="row">
+                                <div class="col-md-12 text-left">
+                            
+                                    <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()">
+                                        <span class="btn-label">
+                                            <i class="fa fa-arrow-left"></i>
+                                        </span>
+                                        Atrás
+                                    </button>
+
+                                </div>
+                                <div class="col-md-12">
+
+                                    <h4 style="margin-top: 10px;">Regístrate con tus credenciales</h4>
+                                    <!-- <h2>Light Bootstrap Dashboard PRO</h2> -->
+
+                                    <hr />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-4 col-md-offset-2">
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon">
+                                    <i class="pe-7s-user"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h4>Free Account</h4>
+                                Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon">
+                                    <i class="pe-7s-graph1"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h4>Awesome Performances</h4>
+                                Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon">
+                                    <i class="pe-7s-headphones"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h4>Global Support</h4>
+                                Here you can write a feature description for your dashboard, let the users know what is the value that you give them.
+
+                            </div>
+                        </div>
+
+                    </div> -->
+                    <div class="col-md-6 col-md-offset-3">
+                        <form autocomplete="off" [formGroup]="myForm">
+                            <div class="card card-plain">
+                                <div class="content">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Nombre" class="form-control" formControlName="nombre" [class.error]="nombreNoValido">
+                                        <small *ngIf="nombreNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="number" placeholder="Edad" class="form-control" min="1" formControlName="edad" [class.error]="edadNoValido">
+                                        <small *ngIf="edadNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Teléfono" class="form-control" formControlName="telefono" [class.error]="telefonoNoValido">
+                                        <small *ngIf="telefonoNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <!-- <input type="text" placeholder="Nivel de estudios" class="form-control" formControlName="nivel_estudios" [class.error]="nivel_estudiosNoValido"> -->
+                                        <select class="form-control" 
+                                                name="_nivel"
+                                                formControlName="nivel_estudios">
+                                            <option selected="" disabled="">- Nivel de estudios -</option>
+                                            <option *ngFor="let item of niveles_estudio" [value]="item.nivel">{{item.nivel}}</option>
+                                        </select>
+                                        <small *ngIf="nivel_estudiosNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Institución de procedencia" class="form-control" formControlName="institucion" [class.error]="institucionNoValido">
+                                        <small *ngIf="institucionNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" placeholder="Email" class="form-control" formControlName="email" [class.error]="emailNoValido">
+                                        <small *ngIf="emailNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" placeholder="Password" class="form-control" formControlName="password" [class.error]="passwordNoValido">
+                                        <small *ngIf="passwordNoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" placeholder="Repertir Password" class="form-control" formControlName="password2" [class.error]="password2NoValido">
+                                        <small *ngIf="password2NoValido" class="text-danger">
+                                          Campo requerido
+                                        </small>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input id="checkbox21" type="checkbox" [checked]="terminos_condiciones" (click)="terminos_condicionesSel()">
+                                            <label for="checkbox21">
+                                                <a href="javascript:void(0)" (click)="TerminosCondiciones()"><small style="color: #eee !important;">Términos y Condiciones</small></a>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input id="checkbox22" type="checkbox" [checked]="aviso_privacidad" (click)="aviso_privacidadSel()">
+                                            <label for="checkbox22">
+                                                <a href="javascript:void(0)" (click)="AvisoPrivacidad()"><small style="color: #eee !important;">Aviso de Privacidad</small></a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer text-center">
+                                    <button type="submit" class="btn btn-fill btn-danger btn-wd" (click)="aGuardar()">Crear cuenta</button>
+                                </div>
+                                <!-- <div class="text-right" style="margin-top: -5px;">
+                                    <a href="javascript:void(0)" (click)="Ingresar()"><small style="color: #eee !important;">Ingresar</small></a>
+                                </div> -->
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <footer class="footer footer-transparent">
+            <div class="container">
+                <p class="copyright text-center">
+                    &copy; {{test | date: 'yyyy'}} <a href="https://www.creative-tim.com">Creative Tim</a>, made with love for a better web
+                </p>
+            </div>
+        </footer> -->
+
+    </div>
+
+</div>

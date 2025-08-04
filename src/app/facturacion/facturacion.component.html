@@ -1,0 +1,126 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Mis Movimientos</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th >Fecha</th>
+                                <th >Usuario</th>
+                                <th >Monto <small>(MXN)</small></th>
+                                <th >Movimiento</th>
+                                <th >Método de pago</th>
+                                <th >Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                  
+                                <td data-titulo="Fecha">{{item.created_at}}</td>
+                                <td data-titulo="User" style="white-space: normal; word-break: break-word;">
+                                  {{item.usuario.email}}
+                                </td>
+                                <td data-titulo="Monto">{{item.total | number: '1.2-2'}}</td>
+                                <td data-titulo="Movimiento">{{item.tipo}}</td>
+                                <td data-titulo="Pago">{{item.api_tipo_pago}}</td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button *ngIf=" item.api_tipo_pago != 'Saldo' && item.facturar == 0"
+                                        [disabled]="item.facturar == 1"
+                                       type="button" class="btn btn-tn btn-primary" title="Facturar movimiento" (click)="aFacturar(item)">Facturar</button>
+                                      <button *ngIf="item.facturar == 1"
+                                        [disabled]="true"
+                                       type="button" class="btn btn-tn btn-warning" title="Movimiento facturado" >Facturado</button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalConfigurar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">CURP</h4>
+    </div>
+    <div class="modal-body">
+
+        <p>Para poder facturar, debes configurar tus datos de facturación.</p>
+        <br>
+        <div class="row">
+          <div class="col-md-12" style="text-align: center;">
+            <button class="btn btn-tn btn-primary btn-with-icon" (click)="irConfiguracion()">Configurar <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>

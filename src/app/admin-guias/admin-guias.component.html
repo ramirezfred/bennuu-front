@@ -1,0 +1,377 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Mis Guías</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <!-- <div class="row">
+                      <div class="col-md-3" style="margin-top: 14px;"> 
+                        Envíos Perros&nbsp;
+                        <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="openModal('#modalSaldo'); aRecargarApi(1,'Envios Perros')"></i>
+                        <br> Saldo = {{saldo_api1}}
+                      </div>
+                      <div class="col-md-3" style="margin-top: 14px;"> 
+                        Mi Envío&nbsp;
+                        <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="openModal('#modalSaldo'); aRecargarApi(2,'Mi Envio')"></i>
+                        <br> Saldo = {{saldo_api2}}
+                      </div>
+                      <div class="col-md-3" style="margin-top: 14px;"> 
+                        Envíos Express&nbsp;
+                        <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="openModal('#modalSaldo'); aRecargarApi(3,'Envios Express')"></i>
+                        <br> Saldo = {{saldo_api3}}
+                      </div>
+                      <div class="col-md-3" style="margin-top: 14px;"> 
+                        Emissary&nbsp;
+                        <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="openModal('#modalSaldo'); aRecargarApi(4,'Emissary')"></i>
+                        <br> Saldo = {{saldo_api4}}
+                      </div>
+                    </div> -->
+
+                    <div class="row" style="margin-top: 14px;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Desde</label>
+                                <input type="text" class="form-control datepicker" placeholder="Date Picker Here" [(ngModel)]="f_desde" #dateInputA/>
+                                <!-- <div *ngIf="!isValidDateDesdeFormat" class="text-danger">
+                                    La fecha debe tener el formato DD/MM/YYYY
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Hasta</label>
+                                <input type="text" class="form-control datepicker" placeholder="Date Picker Here" [(ngModel)]="f_hasta" #dateInputB/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12" style="text-align: center;">
+                        <button style="display: inline-block;" type="button" class="btn btn-tn btn-primary" title="Buscar" (click)="buscar()">
+                          Buscar
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 14px;">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <select class="form-control" id="filtro_selector" [(ngModel)]="termino_selector" (change) = "ChangeValueFiltro($event.target.value)">
+                          <option [value]="''">Filtrar todas</option>
+                          <option [value]="'Creada'">Filtrar creadas</option>
+                          <option [value]="'Pendiente'">Filtrar pendientes</option>
+                          <option [value]="'Cancelación solicitada'">Filtrar en solicitud de cancelación</option>
+                          <option [value]="'Cancelada'">Filtrar canceladas</option>
+                        </select>
+                      </div>
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <div class="input-group">
+                          <input type="text" class="form-control" id="buscar_guia" placeholder="Buscar guía" [(ngModel)]="buscar_guia" autocomplete="off" #txtSearchGuia>
+                          <span class="input-group-btn">
+                            <button class="btn btn-info" (click)="filtrarGuia()"
+                             style="cursor: pointer;" [disabled]="buscar_guia == null || buscar_guia == ''">
+                              Buscar
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="row" style="margin-top: 14px;">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th >Orden</th>
+                                <th >Fecha</th>
+                                <th >Usuario</th>
+                                <th >Origen</th>
+                                <th >Destino</th>
+                                <th >Tipo</th>
+                                <th >Paquetería</th>
+                                <th >Guía</th>
+                                <th >Estado</th>
+                                <th >Total <small>(MXN)</small></th>
+                                <th >Sobrepeso</th>
+                                <th >Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                  
+                                <td data-titulo="Orden">{{item.id}}</td>
+                                <td data-titulo="Fecha">{{item.created_at}}</td>
+                                <td data-titulo="User" style="white-space: normal; word-break: break-word;">
+                                  {{item.usuario.email}}
+                                </td>
+                                <td data-titulo="Origen">
+                                  <div>{{item.remitente.nombre}} {{item.remitente.apellido}}</div>
+                                  <div>&nbsp;{{item.remitente.cp}}</div>
+                                </td>
+                                <td data-titulo="Destino">
+                                  <div>{{item.destino.nombre}} {{item.destino.apellido}}</div>
+                                  <div>&nbsp;{{item.destino.cp}}</div>
+                                </td>
+                                <td data-titulo="Tipo">
+                                  <div>{{item.paquete.tipo}}</div>
+                                  <div>&nbsp;{{item.paquete.peso}} <small>Kg</small></div>
+                                </td>
+                                <td data-titulo="Paquetería">
+                                  <div>{{item.proveedor}}</div>
+                                  <div>&nbsp;{{item.servicio_tipo_aux}}</div>
+                                </td>
+                                <td data-titulo="Guía">
+                                  <a *ngIf="item.estado == 'Creada' " href="javascript:void(0)" (click)="aRastrearGuia(item)" class="text-primary bold">{{item.guia}}</a>
+                                  <!-- {{item.guia}} -->
+                                  <div *ngIf="item.estado == 'Creada' && item.paquete.recoleccion == '1'">&nbsp;Con recolección</div>
+                                  <div *ngIf="item.estado == 'Creada' && item.paquete.recoleccion != '1'">&nbsp;Sin recolección</div>
+                                </td>
+                                <td data-titulo="Estado" >
+                                  {{item.estado}}
+                                  <div *ngIf="item.tipo == 2">&nbsp;Prepagada</div>
+                                </td>
+                                <td data-titulo="Total">{{item.total}}</td>
+                                <td data-titulo="SP">
+                                  <div *ngIf="item.sobrepeso">{{item.sobrepeso.estado}}</div>
+                                  <div *ngIf="item.sobrepeso">{{item.sobrepeso.total}} MXN</div>
+                                  <div *ngIf="item.sobrepeso">{{item.sobrepeso.observaciones}}</div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button *ngIf=" item.estado == 'Pendiente' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Adjuntar" (click)="openModal('#modalAdjuntar'); aAdjuntar(item)">Adjuntar</button>
+                                      <button *ngIf=" item.estado == 'Pendiente' || item.estado == 'Creada' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Cancelar guía" (click)="aCancelar(item)">Cancelar</button>
+                                      <button *ngIf=" item.estado == 'Creada' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Descargar guía" (click)="descargarGuia(item.guia)">Descargar</button>
+                                      <button *ngIf=" item.estado == 'Creada' && !item.sobrepeso" style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Sobrepeso" (click)="openModal('#modalSobrepeso'); aSobrepeso(item)">Sobrepeso</button>
+                                      <button *ngIf=" item.estado == 'Cancelación solicitada' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Aprobar cancelación" (click)="aAprobarCancelacion(item)">Aprobar cancelación</button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalSobrepeso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Sobrepeso</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12 form-group">
+            <div class="input-group">
+              <input type="number" class="form-control" placeholder="Total" [(ngModel)]="total" id="total" min="0">
+              <span class="input-group-btn">
+                <button class="btn btn-danger">
+                  MXN
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 form-group">
+            <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="Observaciones..." [(ngModel)]="observaciones" maxlength="280"></textarea>
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <button type="button" class="btn btn-success btn-fill" data-dismiss="modal" (click)="crearSobrepeso()" [disabled]="!observaciones || observaciones == '' || !total">Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAdjuntar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Adjuntar</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-12 form-group">
+            <label for="" class="control-label">Guía</label>
+            <input type="text" class="form-control" id="num_guia" placeholder="Guía" [(ngModel)]="num_guia">
+          </div>
+        </div>
+
+        <!-- <h5 class="grid-h">Comprobante de pago</h5> -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+                <label for="" class="control-label">Subir archivo</label>
+                <input class="input-file" (change)="capturarFile($event)" type="file" accept=".pdf" #fileInputGuia>
+            </div>             
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <button type="button" class="btn btn-success btn-fill" (click)="adjuntar()" [disabled]="!num_guia || !archivo">Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSaldo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Saldo</h4>
+    </div>
+    <div class="modal-body">
+
+        
+      <div class="row">
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <div>Saldo actual en API {{api_proveedor}}</div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <div>{{saldo_actual}} MXN</div>
+        </div>
+        
+      </div>
+
+      <div class="row" style="margin-top: 14px;">
+        <div class="col-md-12 form-group">
+          <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" id="password">
+        </div>
+        <div class="col-md-12 form-group">
+          <label>Monto a abonar</label>
+          <div class="input-group">
+            <input type="number" class="form-control" placeholder="Monto" [(ngModel)]="abono" id="abono" min="0">
+            <span class="input-group-btn">
+              <button class="btn btn-info">
+                MXN
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <button type="button" class="btn btn-success btn-fill" data-dismiss="modal" (click)="recargarSaldoApi()" [disabled]="!password || password == '' || !abono">Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalRastreoTeiker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Rastreo</h4>
+    </div>
+    <div class="modal-body">
+
+        
+      <div class="row">
+
+        <div class="col-md-12">
+          <div><strong>Status:</strong> {{rastreo_Status}}</div>
+        </div>
+        
+      </div>
+      <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+
+        <div class="col-md-12">
+          <div><strong>Tracking Data:</strong></div>
+        </div>
+        
+      </div>
+      <div class="row" *ngFor="let item of rastreo_TrackingData; index as i">
+
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Fecha:</strong> {{item.fecha}}</div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Lugar:</strong> {{item.lugar}}</div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Descripción:</strong> {{item.descripcion}}</div>
+        </div>
+        <hr>
+        
+      </div>        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+

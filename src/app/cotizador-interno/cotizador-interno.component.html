@@ -1,0 +1,180 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" *ngIf="servicios.length == 0">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xl-offset-3 col-lg-offset-3 col-md-offset-3">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;"> Cotiza tu envío aquí</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    
+                    <form autocomplete="off" [formGroup]="myFormCotizar">
+          
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label>Código postal origen</label>
+                                <input type="text" class="form-control" id="inputorigin_codePostal" placeholder="Código postal origen" formControlName="origin_codePostal" [class.error]="origin_codePostalNoValido">
+                                <small *ngIf="origin_codePostalNoValido" class="text-danger">
+                                  Campo requerido (5)
+                                </small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label>Código postal destino</label>
+                                <input type="text" class="form-control" id="inputdestination_codePostal" placeholder="Código postal destino" formControlName="destination_codePostal" [class.error]="destination_codePostalNoValido">
+                                <small *ngIf="destination_codePostalNoValido" class="text-danger">
+                                  Campo requerido (5)
+                                </small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label>Paquete</label>
+                                <select class="form-control" id="inputType" formControlName="type" (change)="changeType($event.target.value)">
+                                      <option [value]="'Caja'" >Caja</option>
+                                      <option [value]="'Sobre'" >Sobre</option>
+                                      <option [value]="'Tarima'" >Tarima</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label>Peso <span>KG</span></label>
+                                <div class="input-group">
+                                  <div class="input-group-addon">kg</div>
+                                  <input type="number" class="form-control" id="inputweight"
+                                  placeholder="Peso KG" formControlName="weight"
+                                  [class.error]="weightNoValido">
+                                </div>
+                                <small *ngIf="weightNoValido" class="text-danger">
+                                  Campo requerido
+                                </small>
+                            </div>
+                        </div>
+                        <div class="row" [hidden]="myFormCotizar.value.type == 'Sobre' ">
+                            <div class="col-md-4 form-group">
+                              <label>Largo <span>CM</span></label>
+                              <input type="number" class="form-control" id="inputdepth" placeholder="Largo CM" formControlName="depth" [class.error]="depthNoValido">
+                              <small *ngIf="depthNoValido" class="text-danger">
+                                Campo requerido
+                              </small>
+                            </div>
+                            <div class="col-md-4 form-group">
+                              <label>Ancho <span>CM</span></label>
+                              <input type="number" class="form-control" id="inputwidth" placeholder="Ancho CM" formControlName="width" [class.error]="widthNoValido">
+                              <small *ngIf="widthNoValido" class="text-danger">
+                                Campo requerido
+                              </small>
+                            </div>
+                            <div class="col-md-4 form-group">
+                              <label>Alto <span>CM</span></label>
+                              <input type="number" class="form-control" id="inputheight" placeholder="Alto CM" formControlName="height" [class.error]="heightNoValido">
+                              <small *ngIf="heightNoValido" class="text-danger">
+                                Campo requerido
+                              </small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                              <!-- <button type="button" class="btn btn-tn btn-primary" (click)="cotizarAhora()">Cotizar</button> -->
+                              <button type="button" id="cotiza" class="btn btn-block btn-primary" (click)="cotizarAhora()">Cotizar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div> <!-- end card -->
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+    <div class="row" *ngIf="servicios.length > 0">
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <strong>Servicios diponibles</strong>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div style="text-align: right;">
+                              <button style="display: inline-block;" class="btn btn-tn btn-primary" title="Cambiar Búsqueda" (click)="aCotizar()">Cambiar Búsqueda</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    
+                   <div class="row">
+                      <div class="col-md-12">
+                        <div class="table-full-width mi-tabla-movil">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <!-- <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th>
+                                  <th></th> -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let item of servicios; index as i">
+
+                                  <!-- <td class="centro-item-tabla">
+                                    {{item.api_proveedor}}
+                                  </td> -->
+                                  <td data-titulo="">
+                                    {{item.proveedor}}
+                                  </td>
+                                  <td data-titulo="">
+                                    <!-- {{item.servicio_tipo}} -->
+                                    {{item.nombre_mostrar}}
+                                  </td>
+                                  <td data-titulo="">
+                                    {{item.detalle}}
+                                  </td>
+                                  <!-- <td>
+                                    Detalles<br>
+                                    &nbsp;&nbsp;- {{item.recoleccion}}<br>
+                                    &nbsp;&nbsp;- {{item.deliveryType.feature}}<br>
+                                    &nbsp;&nbsp;- {{item.deliveryType.description}}
+                                    <div *ngIf="item.zonasextendidas != '' ">
+                                      &nbsp;&nbsp;- <strong>{{item.zonasextendidas}}</strong> 
+                                    </div>
+                                  </td> -->
+                                  <td data-titulo="">
+                                    Precio {{item.total}} <small>MXN</small>
+                                    <!-- <br><br>
+                                    <button *ngIf="item.buttonSel" type="button" class="btn btn-tn btn-outline-primary" (click)="aComprarServ(item)" title="Seleccionar">Sel</button> -->
+                                  </td>
+                                </tr>
+                                
+                              </tbody>
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div> <!-- end card -->
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+</div>
+</div>
+

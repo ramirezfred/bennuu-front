@@ -1,0 +1,344 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Mis Guías</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th >Orden</th>
+                                <th >Fecha</th>
+                                <th >Usuario</th>
+                                <th >Origen</th>
+                                <th >Destino</th>
+                                <th >Tipo</th>
+                                <th >Paquetería</th>
+                                <th >Guía</th>
+                                <th >Estado</th>
+                                <th >Total <small>(MXN)</small></th>
+                                <th >Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                  
+                                <td data-titulo="Orden">{{item.id}}</td>
+                                <td data-titulo="Fecha">{{item.created_at}}</td>
+                                <td data-titulo="User" style="white-space: normal; word-break: break-word;">
+                                  {{item.usuario.email}}
+                                </td>
+                                <td data-titulo="Origen">
+                                  <div>{{item.remitente.nombre}} {{item.remitente.apellido}}</div>
+                                  <div>&nbsp;{{item.remitente.cp}}</div>
+                                </td>
+                                <td data-titulo="Destino">
+                                  <div>{{item.destino.nombre}} {{item.destino.apellido}}</div>
+                                  <div>&nbsp;{{item.destino.cp}}</div>
+                                </td>
+                                <td data-titulo="Tipo">
+                                  <div>{{item.paquete.tipo}}</div>
+                                  <div>&nbsp;{{item.paquete.peso}} <small>Kg</small></div>
+                                </td>
+                                <td data-titulo="Paquetería">
+                                  <div>{{item.proveedor}}</div>
+                                  <div>&nbsp;{{item.servicio_tipo_aux}}</div>
+                                </td>
+                                <td data-titulo="Guía">
+                                  <a *ngIf="item.estado == 'Creada' " href="javascript:void(0)" (click)="aRastrearGuia(item)" class="text-primary bold">{{item.guia}}</a>
+                                  <!-- {{item.guia}} -->
+                                  <div *ngIf="item.estado == 'Creada' && item.paquete.recoleccion == '1'">&nbsp;Con recolección</div>
+                                  <div *ngIf="item.estado == 'Creada' && item.paquete.recoleccion != '1'">&nbsp;Sin recolección</div>
+                                </td>
+                                <td data-titulo="Estado" >{{item.estado}}</td>
+                                <td data-titulo="Total">
+                                  <div *ngIf="item.tipo != 2">{{item.total}}</div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button *ngIf=" item.estado == 'Creada' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Cancelar guía" (click)="aCancelar(item)">Cancelar</button>
+                                      <button *ngIf=" item.estado == 'Creada' " style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Descargar guía" (click)="getCurp(item.guia)">Descargar</button>
+                                      <button *ngIf="item.estado == 'Cancelación solicitada'"
+                                        [disabled]="true"
+                                       type="button" class="btn btn-tn btn-warning" title="Cancelación solicitada" >Cancelación solicitada</button>
+                                      <button *ngIf="item.estado == 'Cancelada'"
+                                        [disabled]="true"
+                                       type="button" class="btn btn-tn btn-warning" title="Guía cancelada" >Cancelada
+                                      </button>
+                                      <a *ngIf=" item.estado == 'Pendiente' " style="color:#25D366;font-size:40px; margin-right: 40px !important;" href="https://wa.me/5216678444347"  target="_blank">
+                                       <i class="fa fa-whatsapp whatsapp-icon"></i>
+                                      </a>
+                                      <button *ngIf=" item.estado == 'Pendiente' && esFechaValida(item.created_at)" style="margin-top: 4px;" type="button" class="btn btn-tn btn-danger" title="Eliminar orden" (click)="aEliminar(item)">Eliminar</button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalCurp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">CURP</h4>
+    </div>
+    <div class="modal-body">
+
+        <p>Para poder descargar la guía debes ingresar tu CURP ó tus Datos Personales.</p>
+        <p>Este proceso sólo se realiza una vez.</p>
+
+        <ul role="tablist" class="nav nav-tabs mi-nav">
+            <li role="presentation" class="active">
+                <a href="#tab1" data-toggle="tab">Clave Única de Registro de Población</a>
+            </li>
+            <li>
+                <a href="#tab2" data-toggle="tab">Datos Personales</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="tab1" class="tab-pane active" >
+
+                <form autocomplete="off" [formGroup]="myFormCurp">
+                  <div class="row">
+                    <div class="col-md-12 form-group">
+                      <label for="" class="control-label">Clave Única de Registro de Población (CURP)</label>
+                      <input type="text" class="form-control" id="curp" placeholder="CRUP" formControlName="curp" [class.error]="curpNoValido">
+                      <small *ngIf="curpNoValido" class="text-danger">
+                        Requerido (17) (Solo letras y números)
+                      </small>
+                    </div>
+                    
+                    <div class="col-md-12 form-group">
+                      <button type="button" class="btn btn-tn btn-primary" title="Guardar" (click)="guardarCurp()">Guardar</button>
+                    </div>
+                  </div>
+                </form>
+
+                    
+            </div>
+            <div id="tab2" class="tab-pane" >
+
+                <form autocomplete="off" [formGroup]="myFormPersona">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Nombre(s)</label>
+                          <input type="text" class="form-control" id="nombre" placeholder="Nombre(s)" formControlName="nombre" [class.error]="nombreNoValido">
+                          <small *ngIf="nombreNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Primer apellido</label>
+                          <input type="text" class="form-control" id="apellido1" placeholder="Primer apellido" formControlName="apellido1" [class.error]="apellido1NoValido">
+                          <small *ngIf="apellido1NoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Segundo apellido</label>
+                          <input type="text" class="form-control" id="apellido2" placeholder="Segundo apellido" formControlName="apellido2" [class.error]="apellido2NoValido">
+                          <small *ngIf="apellido2NoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Día de nacimiento</label>
+                          <select class="form-control" id="dia" formControlName="dia">
+                            <option disabled selected> Seleccionar el día </option>
+                            <option *ngFor="let item of dias" [value]="item">{{item}}</option>
+                          </select>
+                          <small *ngIf="diaNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Mes de nacimiento</label>
+                          <select class="form-control" id="mes" formControlName="mes">
+                            <option disabled selected> Seleccionar el mes </option>
+                            <option *ngFor="let item of meses" [value]="item">{{item}}</option>
+                          </select>
+                          <small *ngIf="diaNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Año de nacimiento</label>
+                          <input type="text" class="form-control" id="anio" placeholder="Ej. 1943" formControlName="anio" [class.error]="anioNoValido">
+                          <small *ngIf="anioNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Sexo</label>
+                          <select class="form-control" id="sexo" formControlName="sexo">
+                            <option disabled selected> Seleccionar el sexo </option>
+                            <option *ngFor="let item of sexos" [value]="item">{{item}}</option>
+                          </select>
+                          <small *ngIf="sexoNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 form-group">
+                          <label for="" class="control-label">Estado</label>
+                          <select class="form-control" id="estado" formControlName="estado">
+                            <option disabled selected> Seleccionar el estado </option>
+                            <option *ngFor="let item of estados" [value]="item">{{item}}</option>
+                          </select>
+                          <small *ngIf="estadoNoValido" class="text-danger">
+                            Requerido
+                          </small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                          <button type="button" class="btn btn-tn btn-primary" title="Guardar" (click)="guardarPersona()">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalRastreoTeiker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Rastreo</h4>
+    </div>
+    <div class="modal-body">
+
+        
+      <div class="row">
+
+        <div class="col-md-12">
+          <div><strong>Status:</strong> {{rastreo_Status}}</div>
+        </div>
+        
+      </div>
+      <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+
+        <div class="col-md-12">
+          <div><strong>Tracking Data:</strong></div>
+        </div>
+        
+      </div>
+      <div class="row" *ngFor="let item of rastreo_TrackingData; index as i">
+
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Fecha:</strong> {{item.fecha}}</div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Lugar:</strong> {{item.lugar}}</div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+          <div><strong>Descripción:</strong> {{item.descripcion}}</div>
+        </div>
+        <hr>
+        
+      </div>        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="modalRastreoIframe" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Rastreo</h4>
+      </div>
+      <div class="modal-body" style="margin: 0px; padding: 0px;">
+  
+        <div id="container-iframe">
+          <iframe [src]="safeUrl" frameborder="0"></iframe>
+        </div>
+   
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      </div>
+    </div>
+  </div>
+  </div> -->

@@ -1,0 +1,733 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Lista de Usuarios</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                      <div class="col-md-12" style="text-align: right">
+                        <button style="display: inline-block;" type="button" class="btn btn-tn btn-primary" title="Crear usuario" (click)="aCrear()">
+                          Crear usuario
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 14px;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )" autocomplete="off" name="new-buscar">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <!-- <th >ID</th> -->
+                                <th >Fecha de alta</th>
+                                <th >Nombre</th>
+                                <th >Email</th>
+                                <!-- <th >Teléfono</th> -->
+                                <th >RFC</th>
+                                <!-- <th >Validado</th>
+                                <th >Saldo <small>(MXN)</small></th>
+                                <th >Comisión <small>(MXN)</small></th>
+                                <th >Archivos</th>
+                                <th >Paquetería</th>
+                                <th >Status</th> -->
+                                <th >Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                  
+                                <!-- <td data-titulo="ID">{{item.id}}</td> -->
+                                <td data-titulo="F. Alta">{{item.created_at}}</td>
+                                <td data-titulo="Nomb" style="white-space: normal; word-break: break-word;">
+                                  {{item.nombre}}
+                                </td>
+                                <td data-titulo="Email" style="white-space: normal; word-break: break-word;">
+                                  {{item.email}}
+                                </td>
+                                <!-- <td data-titulo="Tlf.">{{item.telefono}}</td> -->
+                                <td data-titulo="RFC">{{item.rfc}}</td>
+                                <!-- <td data-titulo="Validado">
+                                  {{item.validado}}&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aValidar(item)"></i>
+                                </td>
+                                <td data-titulo="Saldo">
+                                  {{item.saldo}}&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aRecargar(item)"></i>
+                                </td>
+                                <td data-titulo="Comisión">
+                                  {{item.comision}}&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetComision(item)"></i>
+                                  &nbsp;&nbsp;
+                                  {{item.comision2}}&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetComision2(item)"></i>
+                                </td>
+                                <td data-titulo="Archivos">
+                                  <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetArchivo(item)"></i>
+                                </td>
+                                <td data-titulo="Paquetería">
+                                  <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetPaqueteria(item,1)"></i>
+                                  &nbsp;&nbsp;
+                                  <i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetPaqueteria(item,2)"></i>
+                                </td>
+                                <td data-titulo="Status">
+                                    <div class="checkbox">
+                                        <input id="checkbox_status{{i}}" type="checkbox" [(ngModel)]="item.status" (change) = "ChangeStatus(item)" style="cursor:pointer;">
+                                        <label *ngIf="!item.status" for="checkbox_status{{i}}">
+                                          &nbsp;&nbsp;&nbsp;OFF
+                                        </label>
+                                        <label *ngIf="item.status" for="checkbox_status{{i}}">
+                                          &nbsp;&nbsp;&nbsp;ON
+                                        </label>
+                                    </div>
+                                </td> -->
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Editar" (click)="aEditar(item)">Editar</button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalValidar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Validar usuario</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-12 form-group" style="text-align: right;">
+                <div class="checkbox">
+                    <input id="checkbox_validar" type="checkbox" [(ngModel)]="validado" (change) = "ChangeValidado($event.target.value)">
+                    <label for="checkbox_validar">
+                      &nbsp;&nbsp;&nbsp;Validar
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>CURP</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.curp}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Nombre</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.nombre}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Primer apellido</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.apellido1}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Segundo apellido</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.apellido2}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Día de nacimiento</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.dia}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Mes de nacimiento</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.mes}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Año de nacimiento</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.anio}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Sexo</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.sexo}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Estado</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div style="overflow: hidden;">{{curp.estado}}</div>
+                </div>
+            </div>
+          </div> 
+
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSaldo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Saldo</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="row show-grid">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div><strong>Saldo actual</strong></div>
+                </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="card" style="background-color: #e9edf2;">
+                <div class="content text-center">
+                    <div>{{saldo_actual}} MXN</div>
+                </div>
+            </div>
+          </div>
+          
+        </div>
+        <br>
+
+        <div class="row">
+          <div class="col-md-12 form-group">
+            <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" id="password_saldo">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 form-group">
+            <label>Monto a abonar</label>
+            <div class="input-group">
+              <input type="number" class="form-control" placeholder="Monto" [(ngModel)]="abono" id="abono" min="0">
+              <span class="input-group-btn">
+                <button class="btn btn-info">
+                  MXN
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <button type="button" class="btn btn-success btn-fill" data-dismiss="modal" (click)="recargarSaldo()" [disabled]="!password || password == '' || !abono">Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalNewUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Usuario</h4>
+    </div>
+    <div class="modal-body">
+
+        <form [formGroup]="myFormCrear" autocomplete="nope">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="input-nombre">Nombre</label>
+                  <input name="nombre" formControlName="nombre" type="text" id="input-nombre" class="form-control" placeholder="Nombre" [class.error]="nombreNoValido"> 
+                  <small *ngIf="nombreNoValido" style="color: #dc3545 !important;">
+                    Requerido
+                  </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="input-email">Email</label>
+                  <input name="email" formControlName="email" id="input-email" pattern=".+@.+..+" class="form-control" placeholder="Email" [class.error]="emailNoValido">
+                  <small *ngIf="emailNoValido" style="color: #dc3545 !important;">
+                    Requerido
+                  </small>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="input-telefono">Teléfono</label>
+                  <input name="telefono" formControlName="telefono" type="text" id="input-telefono" class="form-control" placeholder="Teléfono" [class.error]="telefonoNoValido"> 
+                  <small *ngIf="telefonoNoValido" style="color: #dc3545 !important;">
+                    Requerido (10) (Solo números)
+                  </small>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="input-password">Password</label>
+                  <input name="password" formControlName="password" type="password" id="input-password" class="form-control" placeholder="Password" [class.error]="passwordNoValido"> 
+                  <small *ngIf="passwordNoValido" style="color: #dc3545 !important;">
+                    Requerido
+                  </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="input-password2">Repetir Password</label>
+                  <input name="password2" formControlName="password2" type="password" id="input-password2" class="form-control" placeholder="Repetir Password" [class.error]="password2NoValido"> 
+                  <small *ngIf="password2NoValido" style="color: #dc3545 !important;">
+                    Requerido
+                  </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <br>
+                    <button class="btn btn-tn btn-primary" (click)="register()">Aceptar</button>
+                </div>
+            </div>
+        </form> 
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalArchivos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Archivos</h4>
+    </div>
+    <div class="modal-body">
+
+        
+        <div class="row">
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div>INE</div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 text-center">
+            <div >
+              <button type="button" class="btn btn-tn btn-primary" title="Cargar" (click)="cargarArchivo(1)">Cargar</button>
+              <button *ngIf="archivo.ine" type="button" class="btn btn-tn btn-info" title="Descargar" (click)="descargarArchivo(archivo.ine)" style="margin-left: 5px;">Descargar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div>CSF</div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 text-center">
+            <div >
+              <button type="button" class="btn btn-tn btn-primary" title="Cargar" (click)="cargarArchivo(2)">Cargar</button>
+              <button *ngIf="archivo.csf" type="button" class="btn btn-tn btn-info" title="Descargar" (click)="descargarArchivo(archivo.csf)" style="margin-left: 5px;">Descargar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div>Comprobante de domicilio</div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 text-center">
+            <div >
+              <button type="button" class="btn btn-tn btn-primary" title="Cargar" (click)="cargarArchivo(3)">Cargar</button>
+              <button *ngIf="archivo.cd" type="button" class="btn btn-tn btn-info" title="Descargar" (click)="descargarArchivo(archivo.cd)" style="margin-left: 5px;">Descargar</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div>Contrato</div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 text-center">
+            <div >
+              <button type="button" class="btn btn-tn btn-primary" title="Cargar" (click)="cargarArchivo(4)">Cargar</button>
+              <button *ngIf="archivo.contrato" type="button" class="btn btn-tn btn-info" title="Descargar" (click)="descargarArchivo(archivo.contrato)" style="margin-left: 5px;">Descargar</button>
+            </div>
+          </div>
+
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPaqueterias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">
+        <div *ngIf="paqueteria.tipo == '1'">Paquetería Sobre/Caja</div>
+        <div *ngIf="paqueteria.tipo == '2'">Paquetería Pallet</div>
+      </h4>
+    </div>
+    <div class="modal-body">
+
+        
+        <div class="row show-grid">
+
+          <div class="col-md-6 text-center">
+            <div>Estafeta</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq1" type="checkbox" [(ngModel)]="paqueteria.Estafeta" (change) = "ChangeStatusPaqueteria(1,paqueteria.Estafeta)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.Estafeta" for="checkbox_paq1">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.Estafeta" for="checkbox_paq1">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>RedPack</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq2" type="checkbox" [(ngModel)]="paqueteria.RedPack" (change) = "ChangeStatusPaqueteria(2,paqueteria.RedPack)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.RedPack" for="checkbox_paq2">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.RedPack" for="checkbox_paq2">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>99Minutos</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq3" type="checkbox" [(ngModel)]="paqueteria._99Minutos" (change) = "ChangeStatusPaqueteria(3,paqueteria._99Minutos)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria._99Minutos" for="checkbox_paq3">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria._99Minutos" for="checkbox_paq3">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>AmPm</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq4" type="checkbox" [(ngModel)]="paqueteria.AmPm" (change) = "ChangeStatusPaqueteria(4,paqueteria.AmPm)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.AmPm" for="checkbox_paq4">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.AmPm" for="checkbox_paq4">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>PaqueteExpress</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq5" type="checkbox" [(ngModel)]="paqueteria.PaqueteExpress" (change) = "ChangeStatusPaqueteria(5,paqueteria.PaqueteExpress)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.PaqueteExpress" for="checkbox_paq5">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.PaqueteExpress" for="checkbox_paq5">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>FedEx</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq6" type="checkbox" [(ngModel)]="paqueteria.FedEx" (change) = "ChangeStatusPaqueteria(6,paqueteria.FedEx)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.FedEx" for="checkbox_paq6">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.FedEx" for="checkbox_paq6">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>JTExpress</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+                <div class="checkbox">
+                    <input id="checkbox_paq7" type="checkbox" [(ngModel)]="paqueteria.JTExpress" (change) = "ChangeStatusPaqueteria(7,paqueteria.JTExpress)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.JTExpress" for="checkbox_paq7">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.JTExpress" for="checkbox_paq7">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>DHL</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+              <div class="checkbox">
+                    <input id="checkbox_paq8" type="checkbox" [(ngModel)]="paqueteria.DHL" (change) = "ChangeStatusPaqueteria(8,paqueteria.DHL)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.DHL" for="checkbox_paq8">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.DHL" for="checkbox_paq8">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row show-grid" style="margin-top: 10px;">
+          <div class="col-md-6 text-center">
+            <div>TresGuerras</div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div >
+              <div class="checkbox">
+                    <input id="checkbox_paq9" type="checkbox" [(ngModel)]="paqueteria.TresGuerras" (change) = "ChangeStatusPaqueteria(9,paqueteria.TresGuerras)" style="cursor:pointer;">
+                    <label *ngIf="!paqueteria.TresGuerras" for="checkbox_paq9">
+                      &nbsp;&nbsp;&nbsp;OFF
+                    </label>
+                    <label *ngIf="paqueteria.TresGuerras" for="checkbox_paq9">
+                      &nbsp;&nbsp;&nbsp;ON
+                    </label>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Atrás</button>
+      <!-- <button type="button" class="btn btn-success btn-fill" (click)="guardar()">Aceptar</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+<div [hidden]="true">
+  <input type="file" name="archivo" id="fileInputArchivo" (change)="capturarFileArchivo($event)" #fileInputArchivo accept=".pdf" style="display: none;">
+</div>

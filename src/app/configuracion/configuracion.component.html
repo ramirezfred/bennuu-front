@@ -1,0 +1,235 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+  <div class="row" *ngIf="flag_empresa">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                            <span class="btn-label">
+                                <i class="fa fa-arrow-left"></i>
+                            </span>
+                            Atrás
+                        </button>
+                        
+                        <h4 class="title" style="display: inline-block; margin-left: 5px;"> Configurar nombre de Empresa</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                
+              <div class="row">
+                  <div class="col-md-12 form-group">
+                    <label>Empresa</label>
+                    <input type="text" class="form-control" id="nombre_empresa" placeholder="Empresa" [(ngModel)]="nombre_empresa" name="nombre_empresa">
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-12 form-group">
+                    <button type="button" class="btn btn-tn btn-primary" title="Guardar" (click)="editarEmpresa()" [disabled]="nombre_empresa == '' || nombre_empresa == null">Guardar</button>
+                  </div>
+              </div>
+
+            </div>
+        </div> <!-- end card -->
+
+    </div> <!--  end col-md-6  -->
+  </div> <!-- end row -->
+
+  <div class="row" >
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+
+          <div class="card">
+              <div class="header">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                              <span class="btn-label">
+                                  <i class="fa fa-arrow-left"></i>
+                              </span>
+                              Atrás
+                          </button>
+                          
+                          <h4 class="title" style="display: inline-block; margin-left: 5px;"> Configurar datos de facturación</h4>
+                      </div>
+                  </div>
+              </div>
+              <div class="content">
+                  
+                  <form autocomplete="off" [formGroup]="myFormFacturacion">
+        
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>RFC</label>
+                            <input type="text" class="form-control" id="rfc" placeholder="RFC" formControlName="rfc" [class.error]="rfcNoValido" (keyup)="rfcKeyup()">
+                            <small *ngIf="rfcNoValido" class="text-danger">
+                              Requerido (13) (Solo letras y números)
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>Razón social</label>
+                            <input type="text" class="form-control" id="business_name" placeholder="Razón social" formControlName="business_name" [class.error]="business_nameNoValido" (keyup)="business_nameKeyup()">
+                            <small *ngIf="business_nameNoValido" class="text-danger">
+                              Requerido
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>Régimen</label>
+                            <input type="text" class="form-control" id="description_regimen" placeholder="Régimen" formControlName="description_regimen" [class.error]="description_regimenNoValido" (keyup)="description_regimenKeyup()">
+                            <small *ngIf="description_regimenNoValido" class="text-danger">
+                              Requerido
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>Uso de CFDI</label>
+                            <input type="text" class="form-control" id="description" placeholder="Uso de CFDI" formControlName="description" [class.error]="descriptionNoValido" (keyup)="descriptionKeyup()">
+                            <small *ngIf="descriptionNoValido" class="text-danger">
+                              Requerido
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>Código Postal</label>
+                            <input type="text" class="form-control" id="zip_code" placeholder="Código Postal" formControlName="zip_code" [class.error]="zip_codeNoValido" (keyup)="zip_codeKeyup()">
+                            <small *ngIf="zip_codeNoValido" class="text-danger">
+                              Requerido (5) (Solo números)
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="business_email" placeholder="Email" formControlName="business_email" [class.error]="business_emailNoValido" (keyup)="business_emailKeyup()">
+                            <small *ngIf="business_emailNoValido" class="text-danger">
+                              Requerido
+                            </small>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12 form-group">
+                            <button type="button" class="btn btn-tn btn-primary" title="Guardar" (click)="guardar()">Guardar</button>
+                          </div>
+                      </div>
+                  </form>
+
+              </div>
+          </div> <!-- end card -->
+
+      </div> <!--  end col-md-6  -->
+
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="content">
+              <div class="row">
+
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>RFC</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div style="overflow: hidden;">{{user.rfc}}</div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>Razón social</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div style="overflow: hidden;">{{user.business_name}}</div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>Uso de CFDI</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div style="overflow: hidden;">{{user.description}}</div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>Código Postal</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div style="overflow: hidden;">{{user.zip_code}}</div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>Email</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div style="overflow: hidden;">{{user.business_email}}</div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12" style="margin-top: 4px;">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <div><strong>Acciones</strong></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                  <div class="card" style="background-color: #e9edf2;">
+                      <div class="content text-center">
+                          <button type="button" class="btn btn-tn btn-primary" title="Editar" (click)="precargarDataFormFacturacion()">Editar</button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+  </div> <!-- end row -->
+
+
+</div>
+</div>
+

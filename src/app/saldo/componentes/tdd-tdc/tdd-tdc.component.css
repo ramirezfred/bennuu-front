@@ -1,0 +1,16 @@
+.text-invalid {
+  color: #dc3545 !important;
+}
+
+.control-invalid {
+  border-color: #dc3545 !important;
+}
+
+.input-color {
+  color: rgba(0,0,0,1);
+  background-color: rgba(231,227,227,1);
+}
+
+.danger{
+  border: 1px solid #c71717;
+}

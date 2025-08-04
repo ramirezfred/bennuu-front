@@ -1,0 +1,168 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Movimientos</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                      <div class="col-md-12" style="text-align: right">
+                        <button style="display: inline-block;" type="button" class="btn btn-tn btn-primary" title="Facturar" (click)="facturar()">
+                          Facturar
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 14px;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Desde</label>
+                                <input type="text" class="form-control datepicker" placeholder="Date Picker Here" [(ngModel)]="f_desde" #dateInputA/>
+                                <!-- <div *ngIf="!isValidDateDesdeFormat" class="text-danger">
+                                    La fecha debe tener el formato DD/MM/YYYY
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Hasta</label>
+                                <input type="text" class="form-control datepicker" placeholder="Date Picker Here" [(ngModel)]="f_hasta" #dateInputB/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12" style="text-align: center;">
+                        <button style="display: inline-block;" type="button" class="btn btn-tn btn-primary" title="Buscar" (click)="buscar()">
+                          Buscar
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 14px; display: flex; flex-direction: column; align-items: flex-end">
+                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                        <select class="form-control" id="filtro_selector" [(ngModel)]="termino_selector" (change) = "ChangeValueFiltro($event.target.value)">
+                          <option [value]="''">Filtrar todas</option>
+                          <option [value]="'Si'">Filtrar facturadas</option>
+                          <option [value]="'No'">Filtrar no facturadas</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div class="row" style="margin-top: 14px;">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th >Fecha</th>
+                                <th >Monto <small>(MXN)</small></th>
+                                <th >Movimiento</th>
+                                <th >Método de pago</th>
+                                <th >Email</th>
+                                <!-- <th >Teléfono</th> -->
+                                <th >RFC</th>
+                                <th >Razón social</th>
+                                <th >Facturado</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                  
+                                <td data-titulo="Fecha">{{item.created_at}}</td>
+                                <td data-titulo="Monto">{{item.total | number: '1.2-2'}}</td>
+                                <td data-titulo="Movimiento">{{item.tipo}}</td>
+                                <td data-titulo="Pago">{{item.api_tipo_pago}}</td>
+                                <td data-titulo="Email">{{item.usuario.email}}</td>
+                                <!-- <td data-titulo="Tlf.">{{item.usuario.telefono}}</td> -->
+                                <td data-titulo="RFC">{{item.usuario.rfc}}</td>
+                                <td data-titulo="Nombre">{{item.usuario.business_name}}</td>
+                                <td data-titulo="Facturado">{{item.facturado}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+<div id="exportable" [hidden]="true">
+  <table class="table">
+      <thead>
+        <th >Fecha</th>
+        <th >Monto <small>(MXN)</small></th>
+        <!-- <th >Movimiento</th> -->
+        <th >Metodo de pago</th>
+        <th >Email</th>
+        <!-- <th >Telefono</th> -->
+        <th >RFC</th>
+        <th >Razon social</th>
+        <th >Uso de CFDI</th>
+        <th >CP</th>
+      </thead>  
+      <tbody>
+        <tr *ngFor="let item of noFacturadas" >
+            
+          <td >{{item.created_at}}</td>
+          <td >{{item.total}}</td>
+          <!-- <td >{{item.tipo}}</td> -->
+          <td >{{item.api_tipo_pago}}</td>
+          <td >{{item.usuario.email}}</td>
+          <!-- <td >{{item.usuario.telefono}}</td> -->
+          <td >{{item.usuario.rfc}}</td>
+          <td >{{item.usuario.business_name}}</td>
+          <td >{{item.usuario.description}}</td>
+          <td >{{item.usuario.zip_code}}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+

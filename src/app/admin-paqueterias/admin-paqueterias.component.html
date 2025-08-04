@@ -1,0 +1,108 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Paqueterías</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                  <div class="row" style="margin-top: 14px;">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )">
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 14px;">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 form-group">
+                      <select class="form-control" id="filtro_selector" [(ngModel)]="termino_selector" (change) = "ChangeValueFiltro($event.target.value)">
+                        <option [value]="''">Todas las APIs</option>
+                        <option [value]="'CargoMart'">CargoMart</option>
+                        <option [value]="'Manuable'">Manuable</option>
+                        <option [value]="'Pak2Go'">Pak2Go</option>
+                        <option [value]="'Teiker'">Teiker</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 14px;">
+                    <div class="col-md-12"> 
+                      <div class="table-full-width mi-tabla-movil">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th >API</th>
+                              <th >Transportista</th>
+                              <th >Tipo</th>
+                              <th >Nombre</th>
+                              <th >Acciones</th>
+                            </tr>
+                          </thead>  
+                          <tbody>
+                            <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                              <td data-titulo="API">{{item.api_proveedor}}</td>
+                              <td data-titulo="Transporte">{{item.nombre_transportista}}</td>
+                              <td data-titulo="Tipo">{{item.tipo_servicio}}</td>
+                              <td data-titulo="Nombre" style="white-space: normal; word-break: break-word;">{{item.nombre_mostrar}}</td>
+                              <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button style="margin-top: 4px;" type="button" class="btn btn-tn btn-primary" title="Editar" (click)="aEditar(item)">Editar</button>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top: 14px;">
+                    <div class="col-md-12 text-center"> 
+                      <ul class="pagination">
+                          <!--
+                              color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                          -->
+                          <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                          <!-- <li><a href="#">1</a></li>
+                          <li><a href="#">2</a></li> -->
+                          <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                          <!-- <li><a href="#">4</a></li>
+                          <li><a href="#">5</a></li> -->
+                          <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div> <!-- end content -->
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-12  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+
+
