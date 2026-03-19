@@ -1,88 +1,169 @@
 <div class="main-content" id="id_scroll">
-    <div class="container-fluid"> 
+  <div class="container-fluid"> 
 
-        
+      
 
-        <div class="row">
-            <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
-                <ngx-charts-number-card
-                  [scheme]="colorScheme1"
-                  [results]="single1">
-                </ngx-charts-number-card>
-            </div>
+    <div class="row">
+      <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
+        <ngx-charts-number-card
+          [scheme]="colorScheme1"
+          [results]="single1">
+        </ngx-charts-number-card>
+      </div>
+    </div>
+
+      
+    <div class="avisos-container" *ngIf="avisos.length > 0">
+      <div class="card card-avisos">
+        <div class="card-header">
+          <h5 class="card-title">
+            <i class="pe-7s-bell"></i> Avisos Importantes
+          </h5>
         </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th width="60"></th>
+                  <th>Aviso</th>
+                  <th width="100"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let aviso of avisos" class="aviso-row">
+                  <td class="text-center">
+                    <i [class]="aviso.icono + ' aviso-icon'" 
+                      [style.color]="'#51CBCE'"></i>
+                  </td>
+                  <td>
+                    <strong>{{ aviso.titulo }}</strong>
+                    <br>
+                    <small class="text-muted">
+                      Vigente del {{ aviso.fecha_desde | date:'dd/MM/yyyy' }} 
+                      al {{ aviso.fecha_hasta | date:'dd/MM/yyyy' }}
+                    </small>
+                  </td>
+                  <td class="text-center">
+                    <button *ngIf="tieneMensaje(aviso)" 
+                            class="btn btn-info btn-sm btn-fill" 
+                            (click)="verDetalle(aviso)">
+                      <i class="pe-7s-more"></i> Más
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="header">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
 
-                        <div style="position: absolute; top: 0px; right:15px;" >
-                          <button  type="button" class="btn btn-icon btn-tn btn-primary" title="Refresh" (click)="getDiagram4()">
-                            <i class="fa fa-refresh icon-refresh"></i>
-                          </button>
-                        </div>
-
+                    <div style="position: absolute; top: 0px; right:15px;" >
+                      <button  type="button" class="btn btn-icon btn-tn btn-primary" title="Refresh" (click)="getDiagram4()">
+                        <i class="fa fa-refresh icon-refresh"></i>
+                      </button>
                     </div>
-                    <div class="content">
 
-                        <div style="text-align: center;" class="row">
-                          <div class="col-md-12">
-                            <h4 class="title">Envíos por mes</h4>
-                          </div>
-                        </div>
+                </div>
+                <div class="content">
 
+                    <div style="text-align: center;" class="row">
+                      <div class="col-md-12">
+                        <h4 class="title">Envíos por mes</h4>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div style="margin-top: 10px" class="col-md-12" *ngIf="radioModelD4 != 'left'">
                         <div class="row">
-                          <div style="margin-top: 10px" class="col-md-12" *ngIf="radioModelD4 != 'left'">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label>Mes</label>
-                                  <select id="mes" name="mes" class="form-control" [(ngModel)]="mesD4">
-                                    <option [value]="mes" *ngFor ="let mes of meses">{{mes}}</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                  <label>Año</label>
-                                  <select id="anio" name="anio" class="form-control" [(ngModel)]="anioD4">
-                                    <option [value]="anio" *ngFor ="let anio of years">{{anio}}</option>
-                                  </select>
-                                </div>
-                              </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Mes</label>
+                              <select id="mes" name="mes" class="form-control" [(ngModel)]="mesD4">
+                                <option [value]="mes" *ngFor ="let mes of meses">{{mes}}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Año</label>
+                              <select id="anio" name="anio" class="form-control" [(ngModel)]="anioD4">
+                                <option [value]="anio" *ngFor ="let anio of years">{{anio}}</option>
+                              </select>
                             </div>
                           </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
-                                <ngx-charts-bar-vertical
-                                  [scheme]="colorScheme2"
-                                  [results]="single2"
-                                  [gradient]="gradient2"
-                                  [xAxis]="showXAxis2"
-                                  [yAxis]="showYAxis2"
-                                  [showXAxisLabel]="showXAxisLabel2"
-                                  [showYAxisLabel]="showYAxisLabel2"
-                                  [xAxisLabel]="xAxisLabel2"
-                                  [yAxisLabel]="yAxisLabel2">
-                                </ngx-charts-bar-vertical>
-                            </div>
-                        </div>
-                        
+                      </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mi-chart-container-movil2" style="pointer-events: none;">
+                            <ngx-charts-bar-vertical
+                              [scheme]="colorScheme2"
+                              [results]="single2"
+                              [gradient]="gradient2"
+                              [xAxis]="showXAxis2"
+                              [yAxis]="showYAxis2"
+                              [showXAxisLabel]="showXAxisLabel2"
+                              [showYAxisLabel]="showYAxisLabel2"
+                              [xAxisLabel]="xAxisLabel2"
+                              [yAxisLabel]="yAxisLabel2">
+                            </ngx-charts-bar-vertical>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
-    
-
-        
-
-  
     </div>
+
+  </div>
 
     
 </div>
 
-
+<!-- Modal Detalle -->
+<div class="modal fade" id="modalDetalleAviso" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="cerrarModal()">
+          <span>&times;</span>
+        </button>
+        <h4 class="modal-title" *ngIf="avisoSeleccionado">
+          <i [class]="avisoSeleccionado.icono"></i>
+          {{ avisoSeleccionado.titulo }}
+        </h4>
+      </div>
+      <div class="modal-body" *ngIf="avisoSeleccionado">
+        <div class="alert alert-info">
+          <strong>Período:</strong> 
+          Del {{ avisoSeleccionado.fecha_desde | date:'dd/MM/yyyy' }} 
+          al {{ avisoSeleccionado.fecha_hasta | date:'dd/MM/yyyy' }}
+        </div>
+        <div *ngIf="avisoSeleccionado.mensaje" class="mensaje-detalle">
+          {{ avisoSeleccionado.mensaje }}
+        </div>
+        <div *ngIf="avisoSeleccionado.imagen" class="imagen-detalle-container">
+          <img [src]="avisoSeleccionado.imagen" 
+              [alt]="avisoSeleccionado.titulo" 
+              class="img-responsive-detalle">
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" 
+                class="btn btn-default" 
+                (click)="cerrarModal()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

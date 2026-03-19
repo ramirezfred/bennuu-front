@@ -9,16 +9,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class APIService {
 
   	//Local freddy
-	public api_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/';
-	public images_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/images_uploads/';
-	public api_public = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/';
-	public archivos_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/archivos_uploads/';
+	// public api_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/';
+	// public images_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/images_uploads/';
+	// public api_public = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/';
+	// public archivos_base = 'http://localhost/proyectos/proy_bennuu/bennuuAPI/public/archivos_uploads/';
 
 	//Remoto vps
-	// public api_base = `https://api.bennuu.mx/`;
-	// public images_base = `https://api.bennuu.mx/images_uploads/`;
-	// public api_public = `https://api.bennuu.mx/`;
-	// public archivos_base = `https://api.bennuu.mx/archivos_uploads/`;
+	public api_base = `https://api.bennuu.mx/`;
+	public images_base = `https://api.bennuu.mx/images_uploads/`;
+	public api_public = `https://api.bennuu.mx/`;
+	public archivos_base = `https://api.bennuu.mx/archivos_uploads/`;
 
   constructor(private http: HttpClient) { }
 

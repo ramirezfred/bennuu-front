@@ -107,6 +107,8 @@ export class AdminPaquetesPrepagadosComponent implements OnInit, OnDestroy{
     {
 
       this.crearFormPaquete();
+      // --- Paquete ---
+      this.setupAutoSanitize(this.myFormPaquete, ['descripcion']);
       this.crearListenersFormPaquete(); 
       this.crearFormCliente();
       this.crearListenersFormCliente(); 
@@ -244,10 +246,10 @@ export class AdminPaquetesPrepagadosComponent implements OnInit, OnDestroy{
       descripcion  : ['', [ Validators.required, Validators.minLength(3), Validators.maxLength(25), Validators.pattern('^[a-z0-9A-ZÑñ\u00E0-\u00FC\u0020]+$') ]  ],
       valor_mercancia  : ['', [ Validators.required, Validators.min(100), Validators.max(10000) ]  ],
       claveProdServ  : ['01010101', [ Validators.required, Validators.minLength(3), Validators.maxLength(8) ]  ],
-      descripcion_producto  : ['No existe en el catálogo', [ Validators.required, Validators.minLength(3), Validators.maxLength(100) ]  ],
+      descripcion_producto  : ['No existe en el catalogo', [ Validators.required, Validators.minLength(3), Validators.maxLength(100) ]  ],
       clave_unidad  : ['H87', [ Validators.required, Validators.minLength(3), Validators.maxLength(3) ]  ],
       nombre_unidad  : ['Pieza', [ Validators.required, Validators.minLength(3), Validators.maxLength(105) ]  ],
-      carta_porteA  : ['01010101-No existe en el catálogo', [ Validators.required, Validators.minLength(3), Validators.maxLength(100) ]  ],
+      carta_porteA  : ['01010101-No existe en el catalogo', [ Validators.required, Validators.minLength(3), Validators.maxLength(100) ]  ],
       carta_porteB  : ['H87-Pieza', [ Validators.required, Validators.minLength(3), Validators.maxLength(110) ]  ],
       alias  : ['', [ Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[a-z0-9A-ZÑñ\u00E0-\u00FC\u0020]+$') ]  ],
 
@@ -947,6 +949,55 @@ export class AdminPaquetesPrepagadosComponent implements OnInit, OnDestroy{
     });
 
   }
+
+  /* Inicio eliminar acentos, signos y puntos */
+  sanitizeText(value: string): string {
+    if (!value) return '';
+    // Eliminar acentos
+    let sanitized = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    // Eliminar signos, comillas, puntos y caracteres especiales (mantiene letras, números y espacios)
+    sanitized = sanitized.replace(/[^a-zA-Z0-9Ññ\u00E0-\u00FC\s]/g, '');
+
+    // // Permitir letras, números y espacios — eliminar todo lo demás
+    // sanitized = sanitized.replace(/[^a-zA-Z0-9Ññ\s]/g, '');
+
+    // Eliminar espacios múltiples
+    sanitized = sanitized.replace(/\s+/g, ' ');
+    // return sanitized.trim();
+
+    return sanitized;
+
+    // if (!value) return '';
+
+    // // 2. Limpieza de acentos (usando normalize y una expresión regular)
+    // let valorLimpio = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // // 3. Limpieza de puntos y otros signos (personaliza esta regex según necesites)
+    // // Esta regex limpia puntos (.), comas (,), y cualquier otro caracter de puntuación básico que no sea letra o número
+    // // **NOTA IMPORTANTE:** Ajusta esta regex ('[^a-zA-Z0-9ñÑ\s]*') si necesitas permitir guiones, etc.
+    // // El patrón '^[a-z0-9A-ZÑñ\u00E0-\u00FC\u0020]+$' en tus formularios
+    // // ya indica qué caracteres son válidos, por lo que aquí simplificamos la remoción.
+
+    // // Remueve explícitamente puntos (.), comas (,) y signos de interrogación/exclamación si los quieres fuera:
+    // valorLimpio = valorLimpio.replace(/[.,;¡!¿?"'`´¨]/g, '');
+
+    // return valorLimpio;
+  }
+
+  setupAutoSanitize(form: FormGroup, fields: string[]) {
+    fields.forEach(fieldName => {
+      const control = form.get(fieldName);
+      if (control) {
+        control.valueChanges.subscribe((value: string) => {
+          const sanitized = this.sanitizeText(value);
+          if (value !== sanitized) {
+            control.setValue(sanitized, { emitEvent: false }); // evita loop infinito
+          }
+        });
+      }
+    });
+  }
+  /* Fin eliminar acentos, signos y puntos */
             
 }
 

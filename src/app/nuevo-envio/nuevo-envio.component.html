@@ -162,10 +162,13 @@
                       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                         <div class="form-group">
                           <label>Colonia</label>
-                          <select class="form-control" id="r_colonias" formControlName="colonia">
+                          <select class="form-control" id="r_colonias" formControlName="colonia" [class.error]="r_coloniaNoValido">
                             <option disabled selected> -- seleccione una colonia -- </option>
                             <option *ngFor="let colonia of coloniasR" [value]="colonia">{{colonia}}</option>
                           </select>
+                          <small *ngIf="r_coloniaNoValido" class="text-danger">
+                            Requerido (2-30)
+                          </small>
                         </div>
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
@@ -176,12 +179,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label>Municipio</label>
-                        <input type="text" class="form-control" id="r_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="r_ciudadNoValido">
-                        <small *ngIf="r_ciudadNoValido" class="text-danger">
-                          Requerido (2-30)
-                        </small>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <div class="form-group">
+                              <label>Municipio</label>
+                              <input type="text" class="form-control" id="r_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="r_ciudadNoValido">
+                              <small *ngIf="r_ciudadNoValido" class="text-danger">
+                                Requerido (2-30)
+                              </small>
+                            </div>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                            <button class="btn btn-social btn-round btn-linkedin" (click)="aEditarCiudad(1)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div class="col-md-6 form-group">
                         <label>Estado</label>
@@ -384,10 +398,13 @@
                       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                         <div class="form-group">
                           <label>Colonia</label>
-                          <select class="form-control" id="d_colonias" formControlName="colonia">
+                          <select class="form-control" id="d_colonias" formControlName="colonia" [class.error]="d_coloniaNoValido">
                             <option disabled selected> -- seleccione una colonia -- </option>
                             <option *ngFor="let colonia of coloniasD" [value]="colonia">{{colonia}}</option>
                           </select>
+                          <small *ngIf="d_coloniaNoValido" class="text-danger">
+                            Requerido (2-30)
+                          </small>
                         </div>
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
@@ -398,12 +415,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label>Municipio</label>
-                        <input type="text" class="form-control" id="d_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="d_ciudadNoValido">
-                        <small *ngIf="d_ciudadNoValido" class="text-danger">
-                          Requerido (2-30)
-                        </small>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <div class="form-group">
+                              <label>Municipio</label>
+                              <input type="text" class="form-control" id="d_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="d_ciudadNoValido">
+                              <small *ngIf="d_ciudadNoValido" class="text-danger">
+                                Requerido (2-30)
+                              </small>
+                            </div>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                            <button class="btn btn-social btn-round btn-linkedin" (click)="aEditarCiudad(2)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div class="col-md-6 form-group">
                         <label>Estado</label>

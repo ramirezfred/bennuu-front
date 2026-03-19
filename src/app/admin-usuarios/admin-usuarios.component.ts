@@ -149,7 +149,8 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
         "_99Minutos": false,
         "PaqueteExpress": false,
         "FedEx": false,
-        "DHL": false
+        "DHL": false,
+        "TresGuerras": false
       }
     ];
 
@@ -810,12 +811,16 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
         
         <div style="text-align:left;">
           <label>
-            <input type="radio" name="tipo_comision" value="fijo" ${this.tipo_comision === 'fijo' ? 'checked' : ''}>
-            Monto fijo
+            <input type="radio" name="tipo_comision" value="adicional" ${this.tipo_comision === 'adicional' ? 'checked' : ''}>
+            Adicional
           </label><br>
           <label>
             <input type="radio" name="tipo_comision" value="porcentaje" ${this.tipo_comision === 'porcentaje' ? 'checked' : ''}>
             Porcentaje (%)
+          </label><br>
+          <label>
+            <input type="radio" name="tipo_comision" value="fijo" ${this.tipo_comision === 'fijo' ? 'checked' : ''}>
+            Precio fijo
           </label>
         </div>
         <br>
@@ -909,12 +914,16 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
         
         <div style="text-align:left;">
           <label>
-            <input type="radio" name="tipo_comision" value="fijo" ${this.tipo_comision2 === 'fijo' ? 'checked' : ''}>
-            Monto fijo
+            <input type="radio" name="tipo_comision" value="adicional" ${this.tipo_comision2 === 'adicional' ? 'checked' : ''}>
+            Adicional
           </label><br>
           <label>
             <input type="radio" name="tipo_comision" value="porcentaje" ${this.tipo_comision2 === 'porcentaje' ? 'checked' : ''}>
             Porcentaje (%)
+          </label><br>
+          <label>
+            <input type="radio" name="tipo_comision" value="fijo" ${this.tipo_comision2 === 'fijo' ? 'checked' : ''}>
+            Precio fijo
           </label>
         </div>
         <br>
@@ -1207,7 +1216,8 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
         "_99Minutos": false,
         "PaqueteExpress": false,
         "FedEx": false,
-        "DHL": false
+        "DHL": false,
+        "TresGuerras": false
       }
     ];
 
@@ -1264,6 +1274,7 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
             that.paqueterias[3].PaqueteExpress = (datos[i].PaqueteExpress == 1) ? true : false;
             that.paqueterias[3].FedEx = (datos[i].FedEx == 1) ? true : false;
             that.paqueterias[3].DHL = (datos[i].DHL == 1) ? true : false;
+            that.paqueterias[3].TresGuerras = (datos[i].TresGuerras == 1) ? true : false;
           }
           
         }
@@ -1328,7 +1339,8 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
       !this.paqueterias[3]._99Minutos ||
       !this.paqueterias[3].PaqueteExpress ||
       !this.paqueterias[3].FedEx ||
-      !this.paqueterias[3].DHL 
+      !this.paqueterias[3].DHL ||
+      !this.paqueterias[3].TresGuerras     
     ){
       this.all_api4_flag = false;
     }else{
@@ -1384,6 +1396,7 @@ export class AdminUsuariosComponent implements OnInit, OnDestroy{
       this.paqueterias[3].PaqueteExpress = this.all_api4_flag;
       this.paqueterias[3].FedEx = this.all_api4_flag;
       this.paqueterias[3].DHL = this.all_api4_flag;
+      this.paqueterias[3].TresGuerras = this.all_api4_flag;
     }
 
     if(

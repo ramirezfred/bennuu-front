@@ -29,6 +29,19 @@ declare interface DataTable {
     dataRows: any[];
 }
 
+declare interface Aviso {
+  id?: number;
+  fecha_desde: string;
+  fecha_hasta: string;
+  titulo: string;
+  mensaje?: string;
+  imagen?: string;
+  icono: string;
+  activo: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 
 @Component({
   selector: 'dashboard-cmp',
@@ -157,6 +170,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     meses = [1,2,3,4,5,6,7,8,9,10,11,12];
 
+    avisos: Aviso[] = [];
+    avisoSeleccionado: Aviso | null = null;
+    loading = false;
+
     constructor(
         private api_serv: APIService,
         private http: HttpClient,
@@ -201,6 +218,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getDiagram4();
       },100);
 
+      if(this.user_rol == '2'){
+        this.cargarAvisosVigentes();
+      }
+
       console.log(this.user_rol);
 
 
@@ -208,7 +229,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
       // acciones de destrucción
-      //this.closeModal('#myModalImg');
+      this.closeModal('#modalDetalleAviso');
     }
 
     ngAfterViewInit(){
@@ -449,6 +470,81 @@ export class DashboardComponent implements OnInit, OnDestroy {
         that.loadDiagram4 = false;
         that.tratarError(msg);
       }
+    });
+  }
+
+  cargarAvisosVigentes(): void {
+
+    this.loading = true;
+  
+    this.avisos = [];
+
+    var datos = {};
+    
+    var that = this;
+
+    this.api_serv.getQuery(`avisos/cliente/vigentes`)
+    .subscribe({
+      next(response : any) {
+        console.log(response);
+
+        that.avisos = response.avisos;
+        
+        that.loading = false;
+
+        if(that.avisos.length > 0){
+          that.showNotification('top','right','info',3000,'pe-7s-info','Tiene avisos nuevos disponibles');
+        }
+
+        for (let i = 0; i < that.avisos.length; i++) {
+          if(that.tieneMensaje(that.avisos[i])){
+            that.verDetalle(that.avisos[i]);
+            break;
+          }
+        }
+
+      },
+      error(msg) {
+        that.loading = false;
+        console.log(msg);
+        that.tratarError(msg);
+      }
+    });
+  
+  }
+
+  verDetalle(aviso: Aviso): void {
+    this.avisoSeleccionado = aviso;
+    $('#modalDetalleAviso').modal('show');
+  }
+
+  cerrarModal(): void {
+    $('#modalDetalleAviso').modal('hide');
+    this.avisoSeleccionado = null;
+  }
+
+  tieneMensaje(aviso: Aviso): boolean {
+    return !!((aviso.mensaje && aviso.mensaje.trim().length > 0) || aviso.imagen);
+  }
+
+  showNotification(from, align, color, timer, icon, message){
+    // var type = ['','info','success','warning','danger'];
+
+    // var color = Math.floor((Math.random() * 4) + 1);
+
+    $.notify({
+      // icon: "pe-7s-gift",
+      // message: "<b>Light Bootstrap Dashboard PRO</b> - forget about boring dashboards."
+      icon: icon,
+      message: message
+    },{
+        //type: type[color],
+        type: color,
+        timer: timer,
+        placement: {
+            from: from,
+            align: align
+        }
     });
   }
 

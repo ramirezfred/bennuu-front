@@ -77,9 +77,23 @@
                                 </td>
                                 <td data-titulo="Comisión">
                                   <div *ngIf="item.padre_id == null">
-                                    {{item.comision}}<span *ngIf="item.tipo_comision == 'porcentaje'">%</span>&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetComision(item)"></i>
-                                    &nbsp;&nbsp;
-                                    {{item.comision2}}<span *ngIf="item.tipo_comision2 == 'porcentaje'">%</span>&nbsp;<i class="fa fa-pencil-square-o" style="cursor:pointer;" (click)="aSetComision2(item)"></i>
+                                    <span>
+                                      <span *ngIf="item.tipo_comision === 'fijo'">$</span>
+                                      <span *ngIf="item.tipo_comision === 'adicional'">+</span>
+                                      {{ item.comision }}
+                                      <span *ngIf="item.tipo_comision === 'porcentaje'">%</span>
+                                    </span>
+                                    
+                                    <i class="fa fa-pencil-square-o" style="cursor:pointer; margin-left: 4px;" (click)="aSetComision(item)"></i>
+
+                                    &nbsp;&nbsp;|&nbsp;&nbsp; <span>
+                                      <span *ngIf="item.tipo_comision2 === 'fijo'">$</span>
+                                      <span *ngIf="item.tipo_comision2 === 'adicional'">+</span>
+                                      {{ item.comision2 }}
+                                      <span *ngIf="item.tipo_comision2 === 'porcentaje'">%</span>
+                                    </span>
+
+                                    <i class="fa fa-pencil-square-o" style="cursor:pointer; margin-left: 4px;" (click)="aSetComision2(item)"></i>
                                   </div>
                                 </td>
                                 <td data-titulo="Archivos">
@@ -1018,6 +1032,25 @@
                                 &nbsp;&nbsp;&nbsp;OFF
                               </label>
                               <label *ngIf="paqueterias[3].DHL" for="api4_paq8">
+                                &nbsp;&nbsp;&nbsp;ON
+                              </label>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row show-grid" style="margin-top: 10px;">
+                    <div class="col-xs-6 text-center">
+                      <div>TresGuerras</div>
+                    </div>
+                    <div class="col-xs-6 text-center">
+                      <div >
+                        <div class="checkbox">
+                              <input id="api4_paq9" type="checkbox" [(ngModel)]="paqueterias[3].TresGuerras" (change) = "ChangeStatusPaqueteria(paqueterias[3].TresGuerras)" style="cursor:pointer;">
+                              <label *ngIf="!paqueterias[3].TresGuerras" for="api4_paq9">
+                                &nbsp;&nbsp;&nbsp;OFF
+                              </label>
+                              <label *ngIf="paqueterias[3].TresGuerras" for="api4_paq9">
                                 &nbsp;&nbsp;&nbsp;ON
                               </label>
                           </div>

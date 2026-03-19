@@ -96,6 +96,10 @@ export const AppRoutes: Routes = [{
             path: 'admin-paqueterias',
             loadChildren: () => import('./admin-paqueterias/admin-paqueterias.module').then(x=>x.AdminPaqueteriasModule)
         },
+        {
+            path: 'admin-avisos',
+            loadChildren: () => import('./admin-avisos/admin-avisos.module').then(x=>x.AdminAvisosModule)
+        },
 
 
         {

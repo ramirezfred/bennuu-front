@@ -148,6 +148,11 @@ export class FiltroPipe implements PipeTransform {
         (item.nombre_mostrar ?? '').toLowerCase().includes( searchLowerCase ) 
       );
       return filteredListado.slice(page, page + 5);    
+    }else if( model == 'Aviso' ){
+      const filteredListado = listado.filter( item =>
+        item.titulo.toLowerCase().includes( searchLowerCase ) 
+      );
+      return filteredListado.slice(page, page + 5);    
     }else{
       return listado.slice(page, page + 5);
     }

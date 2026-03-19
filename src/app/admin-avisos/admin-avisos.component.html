@@ -1,0 +1,330 @@
+<div class="main-content" id="id_scroll">
+<div class="container-fluid">
+
+    <div class="row" >
+        <div class="col-md-12">
+
+            <div class="card">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-tn btn-round btn-fill" (click)="goBack()" style="display: inline-block;">
+                                <span class="btn-label">
+                                    <i class="fa fa-arrow-left"></i>
+                                </span>
+                                Atrás
+                            </button>
+                            
+                            <h4 class="title" style="display: inline-block; margin-left: 5px;">Gestión de Avisos</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <p class="card-category">Administra los avisos que verán tus clientes</p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-fill pull-right" title="Nuevo Aviso" (click)="aCrear()">
+                          <i class="pe-7s-plus"></i> Nuevo Aviso
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 14px;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" placeholder="Buscar..." class="form-control" id="input-search" #txtSearch (keyup)="onSearchModel( txtSearch.value )" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-12"> 
+                        <div class="table-full-width mi-tabla-movil">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Icono</th>
+                                <th>Título</th>
+                                <th>Fecha Desde</th>
+                                <th>Fecha Hasta</th>
+                                <th>Estado</th>
+                                <th>Activo</th>
+                                <th class="text-right">Acciones</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr *ngFor="let item of listado | filtro:page:search:filter_model; index as i">
+                                
+                                <td data-titulo="Icono">
+                                  <i [class]="item.icono + ' icon-custom'" style="font-size: 24px;"></i>
+                                </td>
+                                <td data-titulo="Título">{{ item.titulo }}</td>
+                                <td data-titulo="Desde">{{ item.fecha_desde | date:'dd/MM/yyyy' }}</td>
+                                <td data-titulo="Hasta">{{ item.fecha_hasta | date:'dd/MM/yyyy' }}</td>
+                                <td data-titulo="Estado">
+                                  <span *ngIf="isVigente(item)" class="badge badge-success">Vigente</span>
+                                  <span *ngIf="!isVigente(item)" class="badge badge-secondary">No vigente</span>
+                                </td>
+                                <td data-titulo="Activo">
+                                  <span *ngIf="item.activo" class="badge badge-info">Sí</span>
+                                  <span *ngIf="!item.activo" class="badge badge-warning">No</span>
+                                </td>
+                                
+                                <td>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+
+                                      <button class="btn btn-tn btn-info btn-fill" 
+                                              (click)="aEditar(item)" 
+                                              title="Editar"
+                                              style="margin-top: 4px;">
+                                        <i class="pe-7s-note"></i> Editar
+                                      </button>
+                                      <button class="btn btn-tn btn-danger btn-fill" 
+                                              (click)="aEliminar(item)" 
+                                              title="Eliminar"
+                                              style="margin-top: 4px;">
+                                        <i class="pe-7s-trash"></i> Eliminar
+                                      </button>
+
+                                    </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="footer text-center">
+                    <ul class="pagination">
+                        <!--
+                            color-classes: "pagination-blue", "pagination-azure", "pagination-orange", "pagination-red", "pagination-green"
+                        -->
+                        <li><a class="arrow" href="javascript:void(0)" (click)="prevPage()">«</a></li>
+                        <!-- <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li> -->
+                        <li class="active"><a href="javascript:void(0)" >{{currentPage}}</a></li>
+                        <!-- <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li> -->
+                        <li [class.disabled-pagination]="(listado | filtro:page:search:filter_model).length === 0"><a class="arrow" href="javascript:void(0)" (click)="nextPage()">»</a></li>
+                    </ul>
+                </div>
+            </div> <!-- end card -->
+
+        </div> <!--  end col-md-6  -->
+    </div> <!-- end row -->
+
+
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalAviso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Aviso</h4>
+    </div>
+    <div class="modal-body">
+
+        <form [formGroup]="myForm" autocomplete="nope">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group" 
+                    [class.has-error]="submitted && f['fecha_desde'].errors">
+                <label>Fecha Desde <span class="text-danger">*</span></label>
+                <input type="date" 
+                        class="form-control" 
+                        formControlName="fecha_desde">
+                <span class="help-block" 
+                      *ngIf="submitted && f['fecha_desde'].errors">
+                  La fecha desde es requerida
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group" 
+                    [class.has-error]="submitted && f['fecha_hasta'].errors">
+                <label>Fecha Hasta <span class="text-danger">*</span></label>
+                <input type="date" 
+                        class="form-control" 
+                        formControlName="fecha_hasta">
+                <span class="help-block" 
+                      *ngIf="submitted && f['fecha_hasta'].errors">
+                  La fecha hasta es requerida
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group" 
+                    [class.has-error]="submitted && f['titulo'].errors">
+                <label>Título <span class="text-danger">*</span></label>
+                <input type="text" 
+                        class="form-control" 
+                        formControlName="titulo" 
+                        placeholder="Ej: Temporada Alta, Bloqueo de Carreteras">
+                <span class="help-block" 
+                      *ngIf="submitted && f['titulo'].errors">
+                  El título es requerido
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Mensaje (Opcional)</label>
+                <textarea style="height: auto !important;"
+                          class="form-control" 
+                          formControlName="mensaje" 
+                          rows="4" 
+                          placeholder="Descripción detallada del aviso..."></textarea>
+                <small class="text-muted">
+                  Si agrega un mensaje, aparecerá un botón "Ver más" para los clientes
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group" 
+                    [class.has-error]="submitted && f['icono'].errors">
+                <label>Icono <span class="text-danger">*</span></label>
+                <div class="icon-selector">
+                  <div class="row">
+                    <div class="col-md-3 col-sm-4 col-xs-6" 
+                          *ngFor="let icono of iconos">
+                      <label class="icon-option" 
+                              [class.selected]="f['icono'].value === icono.value">
+                        <input type="radio" 
+                                formControlName="icono" 
+                                [value]="icono.value" 
+                                style="display:none;">
+                        <div class="icon-box">
+                          <i [class]="icono.value" style="font-size: 32px;"></i>
+                          <p>{{ icono.label }}</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center">
+              <div class="form-group">
+                <button type="button" class="btn btn-wd btn-primary" style="width: 80%;" (click)="cargarImagen()" >
+                  <span class="btn-label">
+                      <i class="fa fa-file-image-o"></i>
+                  </span>
+                  Cargar imagen
+                </button>
+              </div>  
+            </div>
+          </div>
+
+          <div class="row" [hidden]="true">
+            <div class="col-md-12">
+              <input type="file" name="image" id="fileInputImagen" (change)="capturarFile($event)" #fileInputImagen accept="image/*" style="display: none;">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+
+              <div *ngIf="imagenUrl" class="img-wrapper">
+
+                <div class="img-container">
+                  <img [src]="imagenUrl" alt="Imagen" />
+                </div>
+
+                <div class="img-actions">
+                  <!-- <button
+                    type="button"
+                    class="btn btn-success btn-xs btn-simple btn-icon"
+                    (click)="verImagen()">
+                    <i class="fa fa-image"></i>
+                  </button> -->
+
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-xs btn-simple btn-icon"
+                    (click)="eliminarImagen()">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="checkbox">
+                  <input type="checkbox" formControlName="activo" id="checkbox22">
+                  <label for="checkbox22">
+                    Aviso activo
+                  </label>
+                </div>
+                <small class="text-muted">
+                  Solo los avisos activos y vigentes serán mostrados a los clientes
+                </small>
+              </div>
+            </div>
+          </div>
+
+        
+
+          <!-- <div class="row">
+            <div class="col-md-12">
+              <div class="form-group text-right">
+                <button type="button" 
+                        class="btn btn-default" 
+                        [disabled]="loading">
+                  <i class="pe-7s-back"></i> Cancelar
+                </button>
+                <button type="submit" 
+                        class="btn btn-primary btn-fill" 
+                        [disabled]="loading">
+                  <i class="pe-7s-diskette"></i> 
+                  {{ loading ? 'Guardando...' : 'Guardar' }}
+                </button>
+              </div>
+            </div>
+          </div> -->
+            
+        </form> 
+
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal" [disabled]="loading">Cancelar</button>
+      <button type="button" class="btn btn-primary btn-fill" (click)="guardar()" [disabled]="loading">{{ loading ? 'Guardando...' : 'Guardar' }}</button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+

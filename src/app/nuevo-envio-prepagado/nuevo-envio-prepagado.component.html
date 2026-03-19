@@ -213,10 +213,13 @@
                       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                         <div class="form-group">
                           <label>Colonia</label>
-                          <select class="form-control" id="r_colonias" formControlName="colonia">
+                          <select class="form-control" id="r_colonias" formControlName="colonia" [class.error]="r_coloniaNoValido">
                             <option disabled selected> -- seleccione una colonia -- </option>
                             <option *ngFor="let colonia of coloniasR" [value]="colonia">{{colonia}}</option>
                           </select>
+                          <small *ngIf="r_coloniaNoValido" class="text-danger">
+                            Requerido (2-30)
+                          </small>
                         </div>
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
@@ -227,12 +230,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label>Municipio</label>
-                        <input type="text" class="form-control" id="r_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="r_ciudadNoValido">
-                        <small *ngIf="r_ciudadNoValido" class="text-danger">
-                          Requerido (2-30)
-                        </small>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <div class="form-group">
+                              <label>Municipio</label>
+                              <input type="text" class="form-control" id="r_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="r_ciudadNoValido">
+                              <small *ngIf="r_ciudadNoValido" class="text-danger">
+                                Requerido (2-30)
+                              </small>
+                            </div>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                            <button class="btn btn-social btn-round btn-linkedin" (click)="aEditarCiudad(1)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div class="col-md-6 form-group">
                         <label>Estado</label>
@@ -435,10 +449,13 @@
                       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                         <div class="form-group">
                           <label>Colonia</label>
-                          <select class="form-control" id="d_colonias" formControlName="colonia">
+                          <select class="form-control" id="d_colonias" formControlName="colonia" [class.error]="d_coloniaNoValido">
                             <option disabled selected> -- seleccione una colonia -- </option>
                             <option *ngFor="let colonia of coloniasD" [value]="colonia">{{colonia}}</option>
                           </select>
+                          <small *ngIf="d_coloniaNoValido" class="text-danger">
+                            Requerido (2-30)
+                          </small>
                         </div>
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
@@ -449,12 +466,23 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-md-6 form-group">
-                        <label>Municipio</label>
-                        <input type="text" class="form-control" id="d_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="d_ciudadNoValido">
-                        <small *ngIf="d_ciudadNoValido" class="text-danger">
-                          Requerido (2-30)
-                        </small>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <div class="form-group">
+                              <label>Municipio</label>
+                              <input type="text" class="form-control" id="d_ciudad" placeholder="Municipio" formControlName="ciudad" [class.error]="d_ciudadNoValido">
+                              <small *ngIf="d_ciudadNoValido" class="text-danger">
+                                Requerido (2-30)
+                              </small>
+                            </div>
+                          </div>
+                          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center" style="margin-top: 24px;">
+                            <button class="btn btn-social btn-round btn-linkedin" (click)="aEditarCiudad(2)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                       <div class="col-md-6 form-group">
                         <label>Estado</label>
@@ -531,6 +559,51 @@
         </div>
     </div>
 
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalContenido" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Confirmar Contenido del Paquete</h4>
+    </div>
+    <div class="modal-body">
+
+        <div class="alert alert-info" style="font-size: 13px;">
+          <i class="fa fa-info-circle"></i> Por favor, <strong>verifica la descripción</strong> del contenido. Puedes modificarla si los artículos han cambiado.
+        </div>
+
+        <form autocomplete="off" [formGroup]="myFormPaquete">
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label>Descripción del contenido</label>
+              <input type="text" class="form-control" id="descripcion" placeholder="Ej. Ropa, Documentos, Electrónicos" formControlName="descripcion" [class.error]="descripcionNoValido">
+              
+              <div class="row">
+                <div class="col-xs-8">
+                  <small *ngIf="descripcionNoValido" class="text-danger">
+                    Requerido (3-25 caracteres, solo letras y números)
+                  </small>
+                </div>
+                <div class="col-xs-4 text-right">
+                  <small class="text-muted">
+                    {{ myFormPaquete.get('descripcion')?.value?.length || 0 }}/25
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="myFormPaquete.invalid" (click)="crearGuia()">Confirmar y Continuar</button>
+    </div>
+  </div>
 </div>
 </div>
 

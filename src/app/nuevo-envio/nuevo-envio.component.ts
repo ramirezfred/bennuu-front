@@ -15,6 +15,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { Location } from '@angular/common';
 
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 declare var Conekta: any;
 
 declare let paypal: any;
@@ -198,12 +200,26 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
       // // this.getPagoPendiente();
       this.countSobrepesosPendientes();
       this.crearFormRemitente();
+      // --- Remitente ---
+      this.setupAutoSanitize(this.myFormRemitente, [
+        'alias', 'calle', 'colonia', 'referencia', 'num_interior', 'num_exterior',
+        'ciudad', 'ciudad2', 'estado', 'estado2', 'empresa', 'nombre',
+        'apellido', 'telefono', 'rfc'
+      ]);
       this.crearListenersFormRemitente();
       this.crearFormDestino();
+      // --- Destino ---
+      this.setupAutoSanitize(this.myFormDestino, [
+        'alias', 'calle', 'colonia', 'referencia', 'num_interior', 'num_exterior',
+        'ciudad', 'ciudad2', 'estado', 'estado2', 'empresa', 'nombre',
+        'apellido', 'telefono', 'rfc'
+      ]);
       this.crearListenersFormDestino();
       // // this.misRemitentes();
       // // this.misDestinos();
       this.crearFormPaquete();
+      // --- Paquete ---
+      this.setupAutoSanitize(this.myFormPaquete, ['alias','descripcion']);
       this.crearListenersFormPaquete(); 
       this.crearFormPago();
       this.crearListenersFormPago();
@@ -593,6 +609,17 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
       }
     });
 
+    // this.myFormRemitente.get('nombre').valueChanges.subscribe( valor => {
+    //   const sanitized = this.sanitizeText(valor);
+    //   if (valor !== sanitized) {
+    //     // this.myFormRemitente.setValue(sanitized, { emitEvent: false });
+
+    //     this.myFormRemitente.patchValue({
+    //       nombre: sanitized
+    //     }, { emitEvent: false }); // importante
+    //   }
+    // });
+
   }
 
   cargarDataFormRemitente() {
@@ -659,11 +686,11 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
   }
 
   get r_ciudadNoValido() {
-    return this.myFormRemitente.get('ciudad').invalid && this.myFormRemitente.get('ciudad').touched
+    return this.myFormRemitente.get('ciudad2').invalid && this.myFormRemitente.get('ciudad2').touched
   }
 
   get r_estadoNoValido() {
-    return this.myFormRemitente.get('estado').invalid && this.myFormRemitente.get('estado').touched
+    return this.myFormRemitente.get('estado2').invalid && this.myFormRemitente.get('estado2').touched
   }
 
   get r_empresaNoValido() {
@@ -888,11 +915,11 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
   }
 
   get d_ciudadNoValido() {
-    return this.myFormDestino.get('ciudad').invalid && this.myFormDestino.get('ciudad').touched
+    return this.myFormDestino.get('ciudad2').invalid && this.myFormDestino.get('ciudad2').touched
   }
 
   get d_estadoNoValido() {
-    return this.myFormDestino.get('estado').invalid && this.myFormDestino.get('estado').touched
+    return this.myFormDestino.get('estado2').invalid && this.myFormDestino.get('estado2').touched
   }
 
   get d_empresaNoValido() {
@@ -1115,8 +1142,14 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
 
          Swal.close ();
 
+        let colonias = that.data.mi_envio.neighborhoods_list;
+        for (let i = 0; i < colonias.length; i++) {
+          colonias[i] = that.sanitizeText(colonias[i]);
+        }
+
            if(bandera == 0){
-            that.coloniasR = that.data.mi_envio.neighborhoods_list;
+            // that.coloniasR = that.data.mi_envio.neighborhoods_list;
+            that.coloniasR = colonias;
             that.myFormRemitente.patchValue({colonia : that.coloniasR[0]});
             that.myFormRemitente.patchValue({ciudad : that.data.mi_envio.municipality});
             that.myFormRemitente.patchValue({estado : that.data.mi_envio.state.name});
@@ -1127,7 +1160,8 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
           }
 
           if(bandera == 1){
-            that.coloniasD = that.data.mi_envio.neighborhoods_list;
+            // that.coloniasD = that.data.mi_envio.neighborhoods_list;
+            that.coloniasD = colonias;
             that.myFormDestino.patchValue({colonia : that.coloniasD[0]});
             that.myFormDestino.patchValue({ciudad : that.data.mi_envio.municipality});
             that.myFormDestino.patchValue({estado : that.data.mi_envio.state.name});
@@ -1319,12 +1353,12 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
     this.myFormPaquete.patchValue({descripcion : ''});
     this.myFormPaquete.patchValue({valor_mercancia : ''});
     this.myFormPaquete.patchValue({claveProdServ : '01010101'});
-    this.myFormPaquete.patchValue({descripcion_producto : 'No existe en el catálogo'});
+    this.myFormPaquete.patchValue({descripcion_producto : 'No existe en el catalogo'});
     this.myFormPaquete.patchValue({clave_unidad : 'H87'});
     this.myFormPaquete.patchValue({nombre_unidad : 'Pieza'});
     this.myFormPaquete.patchValue({guardar : false});
     this.myFormPaquete.patchValue({cotizacion_id : ''});
-    this.myFormPaquete.patchValue({carta_porteA : '01010101-No existe en el catálogo'});
+    this.myFormPaquete.patchValue({carta_porteA : '01010101-No existe en el catalogo'});
     this.myFormPaquete.patchValue({carta_porteB : 'H87-Pieza'});
     this.myFormPaquete.patchValue({terminos : false});
     this.myFormPaquete.patchValue({alias : ''});
@@ -2731,8 +2765,10 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
           Swal.showValidationMessage("El campo Colonia es obligatorio y debe tener un máximo de 30 caracteres");
           return null;
         }
+
+        const coloniaSanitize = this.sanitizeText(colonia);
     
-        return [colonia];
+        return [coloniaSanitize];
       }
     });
     
@@ -2778,6 +2814,118 @@ export class NuevoEnvioComponent implements OnInit, OnDestroy{
     }
 
   }
+
+  /* Inicio eliminar acentos, signos y puntos */
+  sanitizeText(value: string): string {
+    if (!value) return '';
+    // Eliminar acentos
+    let sanitized = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    // Eliminar signos, comillas, puntos y caracteres especiales (mantiene letras, números y espacios)
+    sanitized = sanitized.replace(/[^a-zA-Z0-9Ññ\u00E0-\u00FC\s]/g, '');
+
+    // // Permitir letras, números y espacios — eliminar todo lo demás
+    // sanitized = sanitized.replace(/[^a-zA-Z0-9Ññ\s]/g, '');
+
+    // Eliminar espacios múltiples
+    sanitized = sanitized.replace(/\s+/g, ' ');
+    // return sanitized.trim();
+
+    return sanitized;
+
+    // if (!value) return '';
+
+    // // 2. Limpieza de acentos (usando normalize y una expresión regular)
+    // let valorLimpio = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // // 3. Limpieza de puntos y otros signos (personaliza esta regex según necesites)
+    // // Esta regex limpia puntos (.), comas (,), y cualquier otro caracter de puntuación básico que no sea letra o número
+    // // **NOTA IMPORTANTE:** Ajusta esta regex ('[^a-zA-Z0-9ñÑ\s]*') si necesitas permitir guiones, etc.
+    // // El patrón '^[a-z0-9A-ZÑñ\u00E0-\u00FC\u0020]+$' en tus formularios
+    // // ya indica qué caracteres son válidos, por lo que aquí simplificamos la remoción.
+
+    // // Remueve explícitamente puntos (.), comas (,) y signos de interrogación/exclamación si los quieres fuera:
+    // valorLimpio = valorLimpio.replace(/[.,;¡!¿?"'`´¨]/g, '');
+
+    // return valorLimpio;
+  }
+
+  setupAutoSanitize(form: FormGroup, fields: string[]) {
+    fields.forEach(fieldName => {
+      const control = form.get(fieldName);
+      if (control) {
+        control.valueChanges.subscribe((value: string) => {
+          const sanitized = this.sanitizeText(value);
+          if (value !== sanitized) {
+            control.setValue(sanitized, { emitEvent: false }); // evita loop infinito
+          }
+        });
+      }
+    });
+  }
+  /* Fin eliminar acentos, signos y puntos */
+
+  async aEditarCiudad(tipo) {
+    
+    // 1. Obtener el valor actual basado en 'tipo'
+    let valorInicial = '';
+    if (tipo === 1) { // Origen
+        valorInicial = this.myFormRemitente.get('ciudad2')?.value || '';
+    } else if (tipo === 2) { // Destino
+        valorInicial = this.myFormDestino.get('ciudad2')?.value || '';
+    }
+    
+    // 2. Insertar el valor inicial en el HTML del input (usando template literals)
+    const htmlInput = `
+        <input 
+            id="swal-input2" 
+            class="swal2-input" 
+            placeholder="Municipio" 
+            maxlength="30"
+            value="${valorInicial}"  >
+    `;
+
+    const { value: formValues, isConfirmed } = await Swal.fire({
+      title: "Ingresa un municipio",
+      html: htmlInput, // Usamos la variable con el valor inicial
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+      preConfirm: () => {
+        const ciudad = (document.getElementById('swal-input2') as HTMLInputElement).value;
+    
+        if (!ciudad || ciudad.length > 30) {
+          Swal.showValidationMessage("El campo Municipio es obligatorio y debe tener un máximo de 30 caracteres");
+          return null;
+        }
+
+        const ciudadSanitize = this.sanitizeText(ciudad);
+    
+        return [ciudadSanitize];
+      }
+    });
+    
+    // ... el resto de la lógica de confirmación sigue igual ...
+    
+    if (isConfirmed && formValues) {
+      const [ciudad] = formValues;
+
+      //origen
+      if(tipo == 1){
+        this.myFormRemitente.patchValue({ciudad : ciudad});
+        this.myFormRemitente.patchValue({ciudad2 : ciudad});
+      }
+
+      //destino
+      if(tipo == 2){
+        this.myFormDestino.patchValue({ciudad : ciudad});
+        this.myFormDestino.patchValue({ciudad2 : ciudad});
+      }
+    }
+  }
+
+  
+
 
  
 

@@ -76,6 +76,12 @@ export const ROUTESRol1: RouteInfo[] = [{
         type: 'link',
         icontype: 'fa fa-space-shuttle'
     },
+    {
+        path: '/admin-avisos',
+        title: 'Avisos',
+        type: 'link',
+        icontype: 'pe-7s-bell'
+    },
 ];
 
 
